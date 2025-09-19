@@ -54,18 +54,6 @@
       font-weight: bold;
       position: absolute;
     }
-
-    #ghostVideo {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: -700px;
-      transform: translateY(-50%) scale(1);
-      width: 400px;
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(255,0,100,0.8);
-      z-index: 10;
-    }
   </style>
 </head>
 <body>
@@ -73,43 +61,13 @@
   <button class="btn" id="yesBtn">Yes</button>
   <button class="btn" id="noBtn">No</button>
 
-  <!-- Ghost video (free online source) -->
-  <video id="ghostVideo" src="https://cdn.pixabay.com/video/2021/09/06/88582-596250848_large.mp4"></video>
-
-  <!-- Spooky sound effect -->
-  <audio id="screamSound" src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_bf2f8bb5b8.mp3?filename=scream-6841.mp3"></audio>
-
   <script>
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
-    const ghostVideo = document.getElementById("ghostVideo");
-    const screamSound = document.getElementById("screamSound");
 
-    // Yes button → show ghost
+    // On Yes → go to ghost page
     yesBtn.addEventListener("click", () => {
-      ghostVideo.style.display = "block";
-      ghostVideo.currentTime = 0; // restart video
-      ghostVideo.play();
-      screamSound.currentTime = 0; // restart scream
-      screamSound.play();
-
-      let pos = -700;
-      let scale = 1;
-      const move = setInterval(() => {
-        if (pos >= window.innerWidth / 2 - 200) {
-          clearInterval(move);
-          // Optional: jump scare fullscreen
-          ghostVideo.style.transition = "all 0.5s ease";
-          ghostVideo.style.left = "50%";
-          ghostVideo.style.top = "50%";
-          ghostVideo.style.transform = "translate(-50%, -50%) scale(3)";
-        } else {
-          pos += 20;
-          scale += 0.04;
-          ghostVideo.style.left = pos + "px";
-          ghostVideo.style.transform = `translateY(-50%) scale(${scale})`;
-        }
-      }, 50);
+      window.location.href = "ghost.html";
     });
 
     // No button escapes on hover

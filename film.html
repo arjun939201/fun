@@ -18,34 +18,22 @@
       position: relative;
     }
 
-    /* Floating particles */
-    .particle {
-      position: absolute;
-      background: rgba(255,255,255,0.6);
-      border-radius: 50%;
-      animation: float 10s infinite;
-    }
-    @keyframes float {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
-    }
-
     h1 {
-      font-size: 2.8em;
-      margin-bottom: 40px;
-      text-shadow: 0 0 15px #ff0080, 0 0 25px #ff0080;
+      font-size: 3em;
+      margin-bottom: 50px;
+      text-shadow: 0 0 20px #ff0080, 0 0 40px #ff0080;
       z-index: 2;
     }
 
     .btn {
-      padding: 15px 40px;
+      padding: 16px 45px;
       margin: 20px;
-      font-size: 20px;
+      font-size: 22px;
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      transition: 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
       z-index: 2;
       position: relative;
     }
@@ -53,15 +41,17 @@
     #yesBtn {
       background: linear-gradient(45deg, #00ff87, #60efff);
       color: #111;
+      font-weight: bold;
     }
     #yesBtn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px #60efff;
+      transform: scale(1.15);
+      box-shadow: 0 0 25px #60efff, 0 0 45px #00ff87;
     }
 
     #noBtn {
       background: linear-gradient(45deg, #ff4b2b, #ff416c);
       color: #fff;
+      font-weight: bold;
       position: absolute;
     }
 
@@ -69,34 +59,22 @@
       display: none;
       position: fixed;
       top: 50%;
-      left: -600px;
+      left: -700px;
       transform: translateY(-50%) scale(1);
-      width: 350px;
+      width: 400px;
       border-radius: 20px;
       box-shadow: 0 0 40px rgba(255,0,100,0.8);
       z-index: 10;
     }
-
-    .shout {
-      font-size: 28px;
-      color: #ffeb3b;
-      margin-top: 30px;
-      text-shadow: 0 0 20px #ff5722;
-      z-index: 2;
-    }
   </style>
 </head>
 <body>
-  <!-- Floating particles background -->
-  <div id="particles"></div>
-
   <h1>🎬 Do you love films? 🎥</h1>
   <button class="btn" id="yesBtn">Yes</button>
   <button class="btn" id="noBtn">No</button>
 
-  <!-- Free ghost video -->
+  <!-- Ghost video (free online source) -->
   <video id="ghostVideo" src="https://cdn.pixabay.com/video/2021/09/06/88582-596250848_large.mp4"></video>
-  <div id="shout" class="shout"></div>
 
   <!-- Spooky sound effect -->
   <audio id="screamSound" src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_bf2f8bb5b8.mp3?filename=scream-6841.mp3"></audio>
@@ -105,55 +83,39 @@
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const ghostVideo = document.getElementById("ghostVideo");
-    const shout = document.getElementById("shout");
     const screamSound = document.getElementById("screamSound");
-    const particlesContainer = document.getElementById("particles");
 
-    // Create floating particles
-    function createParticles() {
-      for (let i = 0; i < 30; i++) {
-        const particle = document.createElement("div");
-        particle.classList.add("particle");
-        const size = Math.random() * 6 + 4;
-        particle.style.width = size + "px";
-        particle.style.height = size + "px";
-        particle.style.left = Math.random() * window.innerWidth + "px";
-        particle.style.top = window.innerHeight + "px";
-        particle.style.animationDuration = (Math.random() * 10 + 5) + "s";
-        particlesContainer.appendChild(particle);
-
-        setTimeout(() => {
-          particle.remove();
-        }, 15000);
-      }
-    }
-    setInterval(createParticles, 1000);
-
-    // On Yes → ghost runs with scream
+    // Yes button → show ghost
     yesBtn.addEventListener("click", () => {
       ghostVideo.style.display = "block";
+      ghostVideo.currentTime = 0; // restart video
       ghostVideo.play();
+      screamSound.currentTime = 0; // restart scream
       screamSound.play();
-      shout.textContent = "Aaaaahhh!! The ghost is coming!";
-      let pos = -600;
+
+      let pos = -700;
       let scale = 1;
       const move = setInterval(() => {
-        if (pos >= window.innerWidth / 2 - 150) {
+        if (pos >= window.innerWidth / 2 - 200) {
           clearInterval(move);
-          shout.textContent = "Gotcha! 🎬👻";
+          // Optional: jump scare fullscreen
+          ghostVideo.style.transition = "all 0.5s ease";
+          ghostVideo.style.left = "50%";
+          ghostVideo.style.top = "50%";
+          ghostVideo.style.transform = "translate(-50%, -50%) scale(3)";
         } else {
-          pos += 15;
-          scale += 0.03;
+          pos += 20;
+          scale += 0.04;
           ghostVideo.style.left = pos + "px";
           ghostVideo.style.transform = `translateY(-50%) scale(${scale})`;
         }
       }, 50);
     });
 
-    // No button runs away
+    // No button escapes on hover
     noBtn.addEventListener("mouseover", () => {
-      const x = Math.random() * (window.innerWidth - 150);
-      const y = Math.random() * (window.innerHeight - 80);
+      const x = Math.random() * (window.innerWidth - 160);
+      const y = Math.random() * (window.innerHeight - 100);
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
     });

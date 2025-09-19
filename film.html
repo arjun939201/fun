@@ -6,7 +6,6 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      text-align: center;
       margin: 0;
       height: 100vh;
       display: flex;
@@ -16,12 +15,26 @@
       background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       color: #fff;
       overflow: hidden;
+      position: relative;
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      animation: float 10s infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
     }
 
     h1 {
-      font-size: 2.5em;
+      font-size: 2.8em;
       margin-bottom: 40px;
       text-shadow: 0 0 15px #ff0080, 0 0 25px #ff0080;
+      z-index: 2;
     }
 
     .btn {
@@ -33,6 +46,8 @@
       cursor: pointer;
       transition: 0.3s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 2;
+      position: relative;
     }
 
     #yesBtn {
@@ -67,10 +82,14 @@
       color: #ffeb3b;
       margin-top: 30px;
       text-shadow: 0 0 20px #ff5722;
+      z-index: 2;
     }
   </style>
 </head>
 <body>
+  <!-- Floating particles background -->
+  <div id="particles"></div>
+
   <h1>🎬 Do you love films? 🎥</h1>
   <button class="btn" id="yesBtn">Yes</button>
   <button class="btn" id="noBtn">No</button>
@@ -88,6 +107,27 @@
     const ghostVideo = document.getElementById("ghostVideo");
     const shout = document.getElementById("shout");
     const screamSound = document.getElementById("screamSound");
+    const particlesContainer = document.getElementById("particles");
+
+    // Create floating particles
+    function createParticles() {
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        const size = Math.random() * 6 + 4;
+        particle.style.width = size + "px";
+        particle.style.height = size + "px";
+        particle.style.left = Math.random() * window.innerWidth + "px";
+        particle.style.top = window.innerHeight + "px";
+        particle.style.animationDuration = (Math.random() * 10 + 5) + "s";
+        particlesContainer.appendChild(particle);
+
+        setTimeout(() => {
+          particle.remove();
+        }, 15000);
+      }
+    }
+    setInterval(createParticles, 1000);
 
     // On Yes → ghost runs with scream
     yesBtn.addEventListener("click", () => {

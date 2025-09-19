@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Do You Love Films?</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px #ff0080, 0 0 25px #ff0080;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      margin: 20px;
+      font-size: 20px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    #yesBtn {
+      background: linear-gradient(45deg, #00ff87, #60efff);
+      color: #111;
+    }
+    #yesBtn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #60efff;
+    }
+
+    #noBtn {
+      background: linear-gradient(45deg, #ff4b2b, #ff416c);
+      color: #fff;
+      position: absolute;
+    }
+
+    #ghostVideo {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: -600px;
+      transform: translateY(-50%) scale(1);
+      width: 350px;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(255,0,100,0.8);
+      z-index: 10;
+    }
+
+    .shout {
+      font-size: 28px;
+      color: #ffeb3b;
+      margin-top: 30px;
+      text-shadow: 0 0 20px #ff5722;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 Do you love films? 🎥</h1>
+  <button class="btn" id="yesBtn">Yes</button>
+  <button class="btn" id="noBtn">No</button>
+
+  <!-- Free ghost video -->
+  <video id="ghostVideo" src="https://cdn.pixabay.com/video/2021/09/06/88582-596250848_large.mp4"></video>
+  <div id="shout" class="shout"></div>
+
+  <!-- Spooky sound effect -->
+  <audio id="screamSound" src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_bf2f8bb5b8.mp3?filename=scream-6841.mp3"></audio>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const ghostVideo = document.getElementById("ghostVideo");
+    const shout = document.getElementById("shout");
+    const screamSound = document.getElementById("screamSound");
+
+    // On Yes → ghost runs with scream
+    yesBtn.addEventListener("click", () => {
+      ghostVideo.style.display = "block";
+      ghostVideo.play();
+      screamSound.play();
+      shout.textContent = "Aaaaahhh!! The ghost is coming!";
+      let pos = -600;
+      let scale = 1;
+      const move = setInterval(() => {
+        if (pos >= window.innerWidth / 2 - 150) {
+          clearInterval(move);
+          shout.textContent = "Gotcha! 🎬👻";
+        } else {
+          pos += 15;
+          scale += 0.03;
+          ghostVideo.style.left = pos + "px";
+          ghostVideo.style.transform = `translateY(-50%) scale(${scale})`;
+        }
+      }, 50);
+    });
+
+    // No button runs away
+    noBtn.addEventListener("mouseover", () => {
+      const x = Math.random() * (window.innerWidth - 150);
+      const y = Math.random() * (window.innerHeight - 80);
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moon Glow Toggle</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    background: black;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Space animation with moving stars */
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle linear infinite;
+  }
+
+  @keyframes twinkle {
+    0% { opacity: 0.1; }
+    50% { opacity: 1; }
+    100% { opacity: 0.1; }
+  }
+
+  /* Moon style */
+  .moon {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    background: gray;
+    border-radius: 50%;
+    box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .moon.glow {
+    box-shadow: 0 0 50px 15px rgba(255, 255, 255, 1);
+  }
+</style>
+</head>
+<body>
+
+<div class="moon" id="moon"></div>
+
+<script>
+  // Generate stars
+  const starCount = 150;
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    star.style.top = Math.random() * 100 + '%';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.width = star.style.height = Math.random() * 2 + 1 + 'px';
+    star.style.animationDuration = 2 + Math.random() * 3 + 's';
+    document.body.appendChild(star);
+  }
+
+  // Toggle moon glow
+  const moon = document.getElementById('moon');
+  moon.addEventListener('click', () => {
+    moon.classList.toggle('glow');
+  });
+</script>
+
+</body>
+</html>

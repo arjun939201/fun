@@ -20,7 +20,7 @@
       position: relative;
     }
 
-    /* Space animation layer */
+    /* Starfield background */
     .stars, .stars::after {
       content: "";
       position: absolute;
@@ -43,39 +43,19 @@
       background: radial-gradient(circle, #fff 40%, #ffd700 70%, #ff9800 100%);
       box-shadow: 0 0 15px #fff;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
       position: absolute;
       z-index: 2;
     }
     .star-btn.glowing {
-      box-shadow: 0 0 30px #fff, 0 0 60px #ffeb3b, 0 0 90px #ff9800;
+      box-shadow: 0 0 30px #fff, 0 0 60px #ffeb3b, 0 0 100px #ff9800;
       transform: scale(1.2);
     }
 
-    /* Triangle layout */
+    /* Professional constellation layout */
     #star1 { top: 20%; left: 50%; transform: translateX(-50%); }
-    #star2 { bottom: 20%; left: 25%; }
-    #star3 { bottom: 20%; right: 25%; }
-
-    /* Lines between stars */
-    svg {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 1; /* under text */
-    }
-    line {
-      stroke: #fff;
-      stroke-width: 3;
-      stroke-dasharray: 300;
-      stroke-dashoffset: 300;
-      filter: drop-shadow(0 0 8px #00ffff);
-      animation: drawLine 1s forwards;
-    }
-    @keyframes drawLine {
-      to { stroke-dashoffset: 0; }
-    }
+    #star2 { bottom: 25%; left: 30%; }
+    #star3 { bottom: 25%; right: 30%; }
 
     /* Birthday text */
     .birthday-text {
@@ -111,13 +91,6 @@
 <body>
   <div class="stars"></div>
 
-  <!-- Lines -->
-  <svg id="lines">
-    <line id="line12" x1="0" y1="0" x2="0" y2="0" style="display:none;"/>
-    <line id="line23" x1="0" y1="0" x2="0" y2="0" style="display:none;"/>
-    <line id="line31" x1="0" y1="0" x2="0" y2="0" style="display:none;"/>
-  </svg>
-
   <!-- Stars -->
   <button id="star1" class="star-btn"></button>
   <button id="star2" class="star-btn"></button>
@@ -135,24 +108,11 @@
       document.getElementById('star2'),
       document.getElementById('star3')
     ];
-    const lines = {
-      line12: document.getElementById('line12'),
-      line23: document.getElementById('line23'),
-      line31: document.getElementById('line31')
-    };
     const wish = document.getElementById('wish');
-    const svg = document.getElementById('lines');
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
 
     let clicked = [];
-
-    function getCenter(el) {
-      const rect = el.getBoundingClientRect();
-      const svgRect = svg.getBoundingClientRect();
-      return {
-        x: rect.left + rect.width/2 - svgRect.left,
-        y: rect.top + rect.height/2 - svgRect.top
-      };
-    }
 
     stars.forEach((star, index) => {
       star.addEventListener('click', () => {
@@ -160,36 +120,18 @@
           clicked.push(index);
           star.classList.add('glowing');
 
-          if (clicked.length === 2) {
-            connectStars(stars[clicked[0]], stars[clicked[1]], lines.line12);
-          } else if (clicked.length === 3) {
-            connectStars(stars[clicked[1]], stars[clicked[2]], lines.line23);
-            connectStars(stars[clicked[2]], stars[clicked[0]], lines.line31);
-
+          if (clicked.length === 3) {
             setTimeout(() => {
               stars.forEach(s => s.style.display = 'none');
-              Object.values(lines).forEach(l => l.style.display = 'none'); // hide lines
               wish.style.display = 'block';
               startConfetti();
-            }, 1200);
+            }, 800);
           }
         }
       });
     });
 
-    function connectStars(starA, starB, line) {
-      const a = getCenter(starA);
-      const b = getCenter(starB);
-      line.setAttribute('x1', a.x);
-      line.setAttribute('y1', a.y);
-      line.setAttribute('x2', b.x);
-      line.setAttribute('y2', b.y);
-      line.style.display = 'block';
-    }
-
     /* Confetti */
-    const canvas = document.getElementById("confetti");
-    const ctx = canvas.getContext("2d");
     let W = window.innerWidth, H = window.innerHeight;
     canvas.width = W; canvas.height = H;
 

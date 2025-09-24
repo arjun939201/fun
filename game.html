@@ -115,92 +115,80 @@ canvas {
 <div id="birthdayMsg">Happy Birthday<br>Chinnu Mama <span id="emoji">😀</span></div>  
   
 <script>  
-const moon = document.getElementById("moon");  
-const touchText = document.getElementById("touchText");  
-const birthdayMsg = document.getElementById("birthdayMsg");  
-  
-const canvas = document.getElementById("confetti");  
-const ctx = canvas.getContext("2d");  
-let W = window.innerWidth, H = window.innerHeight;  
-canvas.width = W; canvas.height = H;  
-  
-let particles = [];  
-let confettiStarted = false;  
-  
-// Get moon position for collision detection  
-function getMoonRect() {  
-  const rect = moon.getBoundingClientRect();  
-  return {x: rect.left, y: rect.top, w: rect.width, h: rect.height};  
-}  
-  
-function initConfetti() {  
-  particles = [];  
-  for (let i = 0; i < 150; i++) {  
-    particles.push({  
-      x: Math.random()*W,  
-      y: Math.random()*H - H,  
-      r: Math.random()*4+2,  
-      d: Math.random()*W,  
-      color: "hsl(" + Math.random()*360 + ",100%,50%)",  
-      tilt: Math.floor(Math.random()*10) - 10  
-    });  
-  }  
-}  
-  
-function drawConfetti() {  
-  ctx.clearRect(0,0,W,H);  
-  particles.forEach(p => {  
-    ctx.beginPath();  
-    ctx.fillStyle = p.color;  
-    ctx.fillRect(p.x, p.y, p.r, p.r*3);  
-    ctx.closePath();  
-  });  
-  updateConfetti();  
-  checkMoonCollision();  
-}  
-  
-let angle = 0;  
-function updateConfetti() {  
-  angle += 0.01;  
-  particles.forEach(p => {  
-    p.y += Math.cos(angle+p.d) + 1 + p.r/2;  
-    p.x += Math.sin(angle);  
-    if(p.y > H){  
-      p.y = -10;  
-      p.x = Math.random()*W;  
-    }  
-  });  
-}  
-  
-let confettiInterval;  
-function startConfetti() {  
-  if(confettiStarted) return;  
-  confettiStarted = true;  
-  initConfetti();  
-  confettiInterval = setInterval(drawConfetti,20);  
-}  
-  
-// Detect if any confetti is over the moon  
-let textChanged = false;  
-function checkMoonCollision() {  
-  if(textChanged) return;  
-  const moonRect = getMoonRect();  
-  for(let p of particles){  
-    if(p.x >= moonRect.x && p.x <= moonRect.x + moonRect.w &&  
-       p.y >= moonRect.y && p.y <= moonRect.y + moonRect.h){  
-      touchText.style.display = "none";  
-      birthdayMsg.style.display = "block";  
-      textChanged = true;  
-      break;  
-    }  
-  }  
-}  
-  
-// Moon click → start yellow moon + confetti  
-moon.addEventListener("click", () => {  
-  moon.classList.add("yellow");  
-  startConfetti();  
-});  
+const moon = document.getElementById("moon");
+const touchText = document.getElementById("touchText");
+const birthdayMsg = document.getElementById("birthdayMsg");
+
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+let W = window.innerWidth, H = window.innerHeight;
+canvas.width = W; 
+canvas.height = H;
+
+let particles = [];
+let confettiStarted = false;
+
+function initConfetti() {
+  particles = [];
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H - H,
+      r: Math.random() * 4 + 2,
+      d: Math.random() * W,
+      color: "hsl(" + Math.random() * 360 + ",100%,50%)",
+      tilt: Math.floor(Math.random() * 10) - 10
+    });
+  }
+}
+
+function drawConfetti() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x, p.y, p.r, p.r * 3);
+    ctx.closePath();
+  });
+  updateConfetti();
+}
+
+let angle = 0;
+function updateConfetti() {
+  angle += 0.01;
+  particles.forEach(p => {
+    p.y += Math.cos(angle + p.d) + 1 + p.r / 2;
+    p.x += Math.sin(angle);
+    if (p.y > H) {
+      p.y = -10;
+      p.x = Math.random() * W;
+    }
+  });
+}
+
+let confettiInterval;
+function startConfetti() {
+  if (confettiStarted) return;
+  confettiStarted = true;
+  initConfetti();
+  confettiInterval = setInterval(drawConfetti, 20);
+}
+
+// Moon click → change text immediately + start confetti
+moon.addEventListener("click", () => {
+  moon.classList.add("yellow");        // Moon turns yellow
+  touchText.style.display = "none";    // Hide first text
+  birthdayMsg.style.display = "block"; // Show birthday text
+  startConfetti();                      // Start confetti animation
+});
+
+// Update canvas size on window resize
+window.addEventListener("resize", () => {
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+});
   
 window.addEventListener("resize", () => {  
   W = window.innerWidth;  

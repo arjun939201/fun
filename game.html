@@ -5,8 +5,8 @@
   <title>Birthday Surprise</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@500&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -21,52 +21,71 @@
       font-family: 'Poppins', sans-serif;
     }
 
-    /* Space starfield background */
+    /* Moving stars background */
     .stars, .stars::after {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
-      animation: moveStars 200s linear infinite;
+      animation: moveStars 180s linear infinite;
       z-index: 0;
     }
     @keyframes moveStars {
       from {background-position: 0 0;}
-      to {background-position: -10000px 5000px;}
+      to {background-position: -8000px 4000px;}
     }
 
-    /* Moon styles */
+    /* Moon */
     .moon {
-      width: 180px;
-      height: 180px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       position: absolute;
-      top: 20%;
+      top: 18%;
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
       cursor: pointer;
-      transition: all 1.5s ease;
       background: radial-gradient(circle at 30% 30%, #fff, #e0e0e0 70%, #bdbdbd 100%);
-      box-shadow: 0 0 40px #fff, 0 0 80px #e0e0e0, 0 0 150px #bdbdbd;
+      box-shadow: 0 0 35px #fff, 0 0 70px #e0e0e0, 0 0 120px #bdbdbd;
+      transition: all 1.5s ease;
     }
     .moon.active {
       background: radial-gradient(circle at 30% 30%, #fffde7, #fff176 60%, #fdd835 90%);
-      box-shadow: 0 0 50px #fff176, 0 0 120px #fdd835, 0 0 200px #fbc02d;
+      box-shadow: 0 0 45px #fff176, 0 0 100px #fdd835, 0 0 160px #fbc02d;
       transform: translateX(-50%) scale(1.05);
+    }
+
+    /* Initial Telugu instruction */
+    .instruction {
+      font-size: 1.8rem;
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 0 10px #66ffff, 0 0 20px #ff99ff;
+      z-index: 3;
+      position: absolute;
+      top: calc(18% + 190px);
+      left: 50%;
+      transform: translateX(-50%);
+      animation: blink 1.5s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
     /* Birthday text */
     .birthday-text {
       font-family: 'Great Vibes', cursive;
-      font-size: 4.2rem;
+      font-size: 4rem;
       text-align: center;
       color: #fff;
-      text-shadow: 0 0 20px #ff99ff, 0 0 40px #66ffff;
+      line-height: 1.2;
+      text-shadow: 0 0 15px #ff99ff, 0 0 30px #66ffff;
       display: none;
       z-index: 3;
       position: absolute;
-      top: calc(20% + 200px);
+      top: calc(18% + 200px);
       left: 50%;
       transform: translateX(-50%);
       animation: glowPulse 2s infinite alternate, floatText 6s ease-in-out infinite;
@@ -77,22 +96,24 @@
     }
     @keyframes floatText {
       0%,100% { transform: translate(-50%,0);}
-      50% { transform: translate(-50%,-20px);}
+      50% { transform: translate(-50%,-18px);}
     }
 
-    /* Sparkles */
-    .sparkle {
+    /* Confetti */
+    .confetti {
       position: absolute;
-      width: 3px;
-      height: 3px;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: sparkleAnim 3s infinite ease-in-out alternate;
+      width: 10px;
+      height: 14px;
+      background-color: red;
+      opacity: 0.9;
+      top: -20px;
+      animation: fall linear forwards;
     }
-    @keyframes sparkleAnim {
-      from { transform: scale(1); opacity: 0.5; }
-      to   { transform: scale(1.8); opacity: 1; }
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotateZ(360deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
@@ -102,32 +123,50 @@
   <!-- Moon -->
   <div id="moon" class="moon"></div>
 
+  <!-- Instruction -->
+  <div id="instruction" class="instruction">నన్ను ముట్టుకో</div>
+
   <!-- Wish -->
-  <div id="wish" class="birthday-text">Happy Birthday Chinnu Mama</div>
+  <div id="wish" class="birthday-text">
+    Happy Birthday <br> Chinnu Mama
+  </div>
 
   <script>
     const moon = document.getElementById('moon');
     const wish = document.getElementById('wish');
+    const instruction = document.getElementById('instruction');
 
     moon.addEventListener('click', () => {
       moon.classList.add('active'); // turn yellow
+      instruction.style.display = "none"; // remove Telugu text
       setTimeout(() => {
-        wish.style.display = 'block'; // show wish
+        wish.style.display = 'block'; // show birthday wish
+        launchConfetti();             // trigger confetti
       }, 1500);
     });
 
-    /* Create sparkles for extra space effect */
-    function createSparkles() {
-      for (let i = 0; i < 50; i++) {
-        const sparkle = document.createElement("div");
-        sparkle.classList.add("sparkle");
-        sparkle.style.top = Math.random() * window.innerHeight + "px";
-        sparkle.style.left = Math.random() * window.innerWidth + "px";
-        sparkle.style.animationDuration = (2 + Math.random() * 3) + "s";
-        document.body.appendChild(sparkle);
+    /* Confetti function */
+    function launchConfetti() {
+      for (let i = 0; i < 80; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        document.body.appendChild(confetti);
+
+        // Random colors
+        const colors = ["#ff4081", "#ffeb3b", "#69f0ae", "#40c4ff", "#ffd740", "#ff5252"];
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+        // Random position
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+
+        // Random animation
+        const duration = 3 + Math.random() * 3;
+        confetti.style.animationDuration = duration + "s";
+
+        // Remove after animation
+        setTimeout(() => confetti.remove(), duration * 1000);
       }
     }
-    createSparkles();
   </script>
 </body>
 </html>

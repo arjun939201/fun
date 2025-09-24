@@ -15,10 +15,9 @@ body {
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
   color: white;
-  padding-top: 50px; /* add top padding for moon */
 }
 
 /* Stars background */
@@ -51,7 +50,6 @@ body {
   box-shadow: 0 0 60px rgba(255, 235, 59, 1), 0 0 100px rgba(255, 235, 59, 0.6);
   animation: none;
 }
-
 @keyframes twinkle {
   from {box-shadow:0 0 20px rgba(255,255,255,0.6),0 0 40px rgba(255,255,255,0.3);}
   to {box-shadow:0 0 60px rgba(255,255,255,1),0 0 100px rgba(255,255,255,0.5);}
@@ -63,8 +61,8 @@ body {
   font-family: 'Orbitron', sans-serif;
   font-size: 2.5rem;
   font-weight: bold;
-  color: #ff77aa;
-  text-shadow: 0 0 15px #ff3399, 0 0 30px #ff66cc;
+  color: #ffffff; /* changed to white */
+  text-shadow: 0 0 15px #fff, 0 0 30px #ccc;
   z-index: 2;
   text-align: center;
 }
@@ -107,7 +105,7 @@ canvas {
 <canvas id="confetti"></canvas>
 
 <div id="moon"></div>
-<div id="touchText">నన్ను ముట్టుకో</div>
+<div id="touchText">దమ్ముంటే పట్టుకోరా</div>
 <div id="birthdayMsg">Happy Birthday<br>Chinnu Mama</div>
 
 <script>

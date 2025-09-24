@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Birthday Stars Unlock</title>
+  <title>Birthday Surprise</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Google Fonts -->
@@ -18,6 +18,7 @@
       justify-content: center;
       align-items: center;
       position: relative;
+      font-family: 'Great Vibes', cursive;
     }
 
     /* Starfield background */
@@ -36,71 +37,91 @@
 
     /* Star buttons */
     .star-btn {
-      width: 70px;
-      height: 70px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       border: none;
-      background: radial-gradient(circle, #fff 40%, #ffd700 70%, #ff9800 100%);
-      box-shadow: 0 0 15px #fff;
+      background: radial-gradient(circle, #fff 60%, #d9d9d9 100%);
+      box-shadow: 0 0 8px #fff;
       cursor: pointer;
       transition: all 0.4s ease;
       position: absolute;
       z-index: 2;
+      animation: twinkle 2s infinite ease-in-out alternate;
     }
     .star-btn.glowing {
-      box-shadow: 0 0 30px #fff, 0 0 60px #ffeb3b, 0 0 100px #ff9800;
+      box-shadow: 0 0 20px #fff, 0 0 40px #e0f7ff, 0 0 70px #bbdefb;
       transform: scale(1.2);
+      animation: none;
+    }
+    @keyframes twinkle {
+      from { transform: scale(1); opacity: 0.7; }
+      to { transform: scale(1.15); opacity: 1; }
     }
 
-    /* Professional constellation layout */
-    #star1 { top: 20%; left: 50%; transform: translateX(-50%); }
-    #star2 { bottom: 25%; left: 30%; }
-    #star3 { bottom: 25%; right: 30%; }
+    /* Positioned stars */
+    #star1 { top: 42%; left: 48%; }
+    #star2 { top: 50%; left: 44%; }
+    #star3 { top: 50%; left: 52%; }
 
-    /* Birthday text */
+    /* Moon */
+    .moon {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #e0e0e0 70%, #aaa 100%);
+      box-shadow: 0 0 60px #fff, 0 0 120px #b3e5fc, 0 0 200px #90caf9;
+      position: absolute;
+      top: 22%;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      opacity: 0;
+      z-index: 2;
+    }
+    .moon.show {
+      animation: appearMoon 2.5s forwards ease-out;
+    }
+    @keyframes appearMoon {
+      0% { transform: translateX(-50%) scale(0); opacity: 0; }
+      100% { transform: translateX(-50%) scale(1); opacity: 1; }
+    }
+
+    /* Birthday message */
     .birthday-text {
-      font-family: 'Great Vibes', cursive;
       font-size: 4rem;
       text-align: center;
       color: #fff;
-      text-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
-      animation: glowPulse 2s infinite alternate, floatText 6s ease-in-out infinite;
+      text-shadow: 0 0 20px #ff99ff, 0 0 40px #66ffff;
       display: none;
       z-index: 3;
-      position: relative;
+      position: absolute;
+      bottom: 15%;
+      width: 100%;
+      animation: glowPulse 2s infinite alternate, floatText 6s ease-in-out infinite;
     }
     @keyframes glowPulse {
-      from { text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff; }
-      to   { text-shadow: 0 0 30px #ff66ff, 0 0 50px #33ffff; }
+      from { text-shadow: 0 0 15px #ff99ff, 0 0 25px #66ffff; }
+      to   { text-shadow: 0 0 40px #ff66ff, 0 0 70px #33ffff; }
     }
     @keyframes floatText {
       0%,100% { transform: translateY(0);}
       50% { transform: translateY(-20px);}
-    }
-
-    /* Confetti canvas */
-    canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 2;
     }
   </style>
 </head>
 <body>
   <div class="stars"></div>
 
-  <!-- Stars -->
+  <!-- Clickable Stars -->
   <button id="star1" class="star-btn"></button>
   <button id="star2" class="star-btn"></button>
   <button id="star3" class="star-btn"></button>
 
-  <!-- Confetti -->
-  <canvas id="confetti"></canvas>
+  <!-- Moon -->
+  <div id="moon" class="moon"></div>
 
   <!-- Wish -->
-  <div id="wish" class="birthday-text">Happy Birthday Chinnu</div>
+  <div id="wish" class="birthday-text">Happy Birthday Chinnu Mama</div>
 
   <script>
     const stars = [
@@ -109,8 +130,7 @@
       document.getElementById('star3')
     ];
     const wish = document.getElementById('wish');
-    const canvas = document.getElementById("confetti");
-    const ctx = canvas.getContext("2d");
+    const moon = document.getElementById('moon');
 
     let clicked = [];
 
@@ -122,62 +142,15 @@
 
           if (clicked.length === 3) {
             setTimeout(() => {
-              stars.forEach(s => s.style.display = 'none');
-              wish.style.display = 'block';
-              startConfetti();
-            }, 800);
+              stars.forEach(s => s.style.display = 'none'); // hide stars
+              moon.classList.add('show');
+              setTimeout(() => {
+                wish.style.display = 'block'; // show wish after moon appears
+              }, 2500);
+            }, 600);
           }
         }
       });
-    });
-
-    /* Confetti */
-    let W = window.innerWidth, H = window.innerHeight;
-    canvas.width = W; canvas.height = H;
-
-    const particles = [];
-    for (let i = 0; i < 150; i++) {
-      particles.push({
-        x: Math.random()*W,
-        y: Math.random()*H - H,
-        r: Math.random()*4+1,
-        d: Math.random()*W,
-        color: "hsl(" + Math.random()*360 + ",100%,50%)"
-      });
-    }
-
-    function drawConfetti() {
-      ctx.clearRect(0,0,W,H);
-      particles.forEach(p => {
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.r, p.r*4);
-      });
-      updateConfetti();
-    }
-
-    let angle = 0;
-    function updateConfetti() {
-      angle += 0.01;
-      particles.forEach(p => {
-        p.y += Math.cos(angle+p.d) + 1 + p.r/2;
-        p.x += Math.sin(angle);
-        if (p.y > H) {
-          p.y = -10; 
-          p.x = Math.random()*W;
-        }
-      });
-    }
-
-    let confettiInterval;
-    function startConfetti() {
-      confettiInterval = setInterval(drawConfetti,20);
-    }
-
-    window.addEventListener("resize", () => {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      canvas.width = W;
-      canvas.height = H;
     });
   </script>
 </body>

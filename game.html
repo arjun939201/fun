@@ -127,6 +127,12 @@ canvas.height = H;
 
 let particles = [];
 let confettiStarted = false;
+let textChanged = false; // flag to change text only once
+
+function getMoonRect() {
+  const rect = moon.getBoundingClientRect();
+  return { x: rect.left, y: rect.top, w: rect.width, h: rect.height };
+}
 
 function initConfetti() {
   particles = [];
@@ -151,6 +157,7 @@ function drawConfetti() {
     ctx.closePath();
   });
   updateConfetti();
+  checkMoonCollision(); // check if confetti touches moon
 }
 
 let angle = 0;
@@ -166,20 +173,34 @@ function updateConfetti() {
   });
 }
 
-let confettiInterval;
 function startConfetti() {
   if (confettiStarted) return;
   confettiStarted = true;
   initConfetti();
-  confettiInterval = setInterval(drawConfetti, 20);
+  setInterval(drawConfetti, 20);
 }
 
-// Moon click → change text immediately + start confetti
+// Check if any confetti particle overlaps the moon
+function checkMoonCollision() {
+  if (textChanged) return;
+  const moonRect = getMoonRect();
+  for (let p of particles) {
+    if (
+      p.x >= moonRect.x && p.x <= moonRect.x + moonRect.w &&
+      p.y >= moonRect.y && p.y <= moonRect.y + moonRect.h
+    ) {
+      touchText.style.display = "none";
+      birthdayMsg.style.display = "block";
+      textChanged = true;
+      break;
+    }
+  }
+}
+
+// Moon click → start yellow moon + confetti
 moon.addEventListener("click", () => {
-  moon.classList.add("yellow");        // Moon turns yellow
-  touchText.style.display = "none";    // Hide first text
-  birthdayMsg.style.display = "block"; // Show birthday text
-  startConfetti();                      // Start confetti animation
+  moon.classList.add("yellow");
+  startConfetti();
 });
 
 // Update canvas size on window resize
@@ -189,13 +210,6 @@ window.addEventListener("resize", () => {
   canvas.width = W;
   canvas.height = H;
 });
-  
-window.addEventListener("resize", () => {  
-  W = window.innerWidth;  
-  H = window.innerHeight;  
-  canvas.width = W;  
-  canvas.height = H;  
-});  
 </script>  
 </body>  
 </html>  

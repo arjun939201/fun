@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Birthday Surprise</title>
+  <title>Birthday Unlock</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
   <style>
+    /* Space background */
     body {
       margin: 0;
       height: 100vh;
@@ -17,61 +21,45 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      color: white;
       position: relative;
-      font-family: 'Poppins', sans-serif;
     }
 
-    /* Moving stars background */
+    /* Starfield effect */
     .stars, .stars::after {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
-      animation: moveStars 180s linear infinite;
+      animation: moveStars 200s linear infinite;
       z-index: 0;
     }
     @keyframes moveStars {
       from {background-position: 0 0;}
-      to {background-position: -8000px 4000px;}
+      to {background-position: -10000px 5000px;}
     }
 
-    /* Moon */
-    .moon {
-      width: 160px;
-      height: 160px;
+    /* Star buttons */
+    .star-btn {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      position: absolute;
-      top: 18%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
+      border: none;
+      margin: 1rem;
+      background: radial-gradient(circle, #fff 40%, #ffd700 70%, #ff9800 100%);
+      box-shadow: 0 0 25px #fff, 0 0 40px #ffeb3b, 0 0 60px #ff9800;
+      animation: twinkle 2s infinite alternate;
       cursor: pointer;
-      background: radial-gradient(circle at 30% 30%, #fff, #e0e0e0 70%, #bdbdbd 100%);
-      box-shadow: 0 0 35px #fff, 0 0 70px #e0e0e0, 0 0 120px #bdbdbd;
-      transition: all 1.5s ease;
+      transition: transform 0.3s ease;
+      z-index: 2;
     }
-    .moon.active {
-      background: radial-gradient(circle at 30% 30%, #fffde7, #fff176 60%, #fdd835 90%);
-      box-shadow: 0 0 45px #fff176, 0 0 100px #fdd835, 0 0 160px #fbc02d;
-      transform: translateX(-50%) scale(1.05);
+    .star-btn:hover {
+      transform: scale(1.2);
     }
 
-    /* Initial Telugu instruction */
-    .instruction {
-      font-size: 1.8rem;
-      text-align: center;
-      color: #fff;
-      text-shadow: 0 0 10px #66ffff, 0 0 20px #ff99ff;
-      z-index: 3;
-      position: absolute;
-      top: calc(18% + 190px);
-      left: 50%;
-      transform: translateX(-50%);
-      animation: blink 1.5s infinite;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    @keyframes twinkle {
+      from { box-shadow: 0 0 10px #fff, 0 0 20px #ffeb3b; }
+      to   { box-shadow: 0 0 30px #fff, 0 0 60px #ffeb3b, 0 0 80px #ff9800; }
     }
 
     /* Birthday text */
@@ -80,93 +68,117 @@
       font-size: 4rem;
       text-align: center;
       color: #fff;
-      line-height: 1.2;
-      text-shadow: 0 0 15px #ff99ff, 0 0 30px #66ffff;
-      display: none;
-      z-index: 3;
-      position: absolute;
-      top: calc(18% + 200px);
-      left: 50%;
-      transform: translateX(-50%);
+      text-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
       animation: glowPulse 2s infinite alternate, floatText 6s ease-in-out infinite;
+      z-index: 2;
+      display: none;
     }
     @keyframes glowPulse {
-      from { text-shadow: 0 0 15px #ff99ff, 0 0 25px #66ffff; }
-      to   { text-shadow: 0 0 40px #ff66ff, 0 0 70px #33ffff; }
+      from { text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff; }
+      to   { text-shadow: 0 0 30px #ff66ff, 0 0 50px #33ffff; }
     }
     @keyframes floatText {
-      0%,100% { transform: translate(-50%,0);}
-      50% { transform: translate(-50%,-18px);}
+      0%,100% { transform: translateY(0);}
+      50% { transform: translateY(-20px);}
     }
 
-    /* Confetti */
-    .confetti {
+    /* Confetti canvas */
+    canvas {
       position: absolute;
-      width: 10px;
-      height: 14px;
-      background-color: red;
-      opacity: 0.9;
-      top: -20px;
-      animation: fall linear forwards;
-    }
-    @keyframes fall {
-      to {
-        transform: translateY(100vh) rotateZ(360deg);
-        opacity: 0;
-      }
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
   <div class="stars"></div>
+  <canvas id="confetti"></canvas>
 
-  <!-- Moon -->
-  <div id="moon" class="moon"></div>
+  <!-- Star buttons -->
+  <div id="starsBox" class="d-flex">
+    <button class="star-btn"></button>
+    <button class="star-btn"></button>
+    <button class="star-btn"></button>
+  </div>
 
-  <!-- Instruction -->
-  <div id="instruction" class="instruction">నన్ను ముట్టుకో</div>
-
-  <!-- Wish -->
+  <!-- Birthday Wish -->
   <div id="wish" class="birthday-text">
-    Happy Birthday <br> Chinnu Mama
+    Happy Birthday Chinnu
   </div>
 
   <script>
-    const moon = document.getElementById('moon');
+    const starButtons = document.querySelectorAll('.star-btn');
+    const starsBox = document.getElementById('starsBox');
     const wish = document.getElementById('wish');
-    const instruction = document.getElementById('instruction');
 
-    moon.addEventListener('click', () => {
-      moon.classList.add('active'); // turn yellow
-      instruction.style.display = "none"; // remove Telugu text
-      setTimeout(() => {
-        wish.style.display = 'block'; // show birthday wish
-        launchConfetti();             // trigger confetti
-      }, 1500);
+    let clickedStars = 0;
+
+    starButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.style.visibility = 'hidden';
+        clickedStars++;
+        if (clickedStars === 3) {
+          starsBox.style.display = 'none';
+          wish.style.display = 'block';
+          startConfetti();
+        }
+      });
     });
 
-    /* Confetti function */
-    function launchConfetti() {
-      for (let i = 0; i < 80; i++) {
-        const confetti = document.createElement("div");
-        confetti.classList.add("confetti");
-        document.body.appendChild(confetti);
+    /* Confetti animation */
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let W = window.innerWidth, H = window.innerHeight;
+    canvas.width = W; canvas.height = H;
 
-        // Random colors
-        const colors = ["#ff4081", "#ffeb3b", "#69f0ae", "#40c4ff", "#ffd740", "#ff5252"];
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-        // Random position
-        confetti.style.left = Math.random() * window.innerWidth + "px";
-
-        // Random animation
-        const duration = 3 + Math.random() * 3;
-        confetti.style.animationDuration = duration + "s";
-
-        // Remove after animation
-        setTimeout(() => confetti.remove(), duration * 1000);
-      }
+    const particles = [];
+    for (let i = 0; i < 150; i++) {
+      particles.push({
+        x: Math.random()*W,
+        y: Math.random()*H - H,
+        r: Math.random()*4+1,
+        d: Math.random()*W,
+        color: "hsl(" + Math.random()*360 + ",100%,50%)"
+      });
     }
+
+    function drawConfetti() {
+      ctx.clearRect(0,0,W,H);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.r, p.r*4);
+        ctx.closePath();
+      });
+      updateConfetti();
+    }
+
+    let angle = 0;
+    function updateConfetti() {
+      angle += 0.01;
+      particles.forEach(p => {
+        p.y += Math.cos(angle+p.d) + 1 + p.r/2;
+        p.x += Math.sin(angle);
+        if (p.y > H) {
+          p.y = -10; 
+          p.x = Math.random()*W;
+        }
+      });
+    }
+
+    let confettiInterval;
+    function startConfetti() {
+      confettiInterval = setInterval(drawConfetti,20);
+    }
+
+    window.addEventListener("resize", () => {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+    });
   </script>
 </body>
 </html>

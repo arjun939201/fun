@@ -14,11 +14,11 @@ body {
   overflow: hidden;
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* move content to top */
   align-items: center;
   flex-direction: column;
   color: white;
-  padding:-80px;
+  padding-top: 50px; /* top padding */
 }
 
 /* Stars background */
@@ -40,30 +40,24 @@ body {
   height: 150px;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #fff, #ddd 70%);
-  box-shadow: 0 0 35px rgba(255,255,255,0.9), 0 0 60px rgba(255,255,255,0.5);
   cursor: pointer;
-  animation: twinkle 2s infinite alternate;
   z-index: 2;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 #moon.yellow {
   background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d 70%);
   box-shadow: 0 0 60px rgba(255, 235, 59, 1), 0 0 100px rgba(255, 235, 59, 0.6);
   animation: none;
 }
-@keyframes twinkle {
-  from {box-shadow:0 0 20px rgba(255,255,255,0.6),0 0 40px rgba(255,255,255,0.3);}
-  to {box-shadow:0 0 60px rgba(255,255,255,1),0 0 100px rgba(255,255,255,0.5);}
-}
 
 /* Telugu text */
 #touchText {
-  margin-top: 20px;
+  margin-top: 10px;
   font-family: 'Orbitron', sans-serif;
-  font-size: 2.5rem;
+  font-size: 1.25rem; /* reduced size */
   font-weight: bold;
-  color: #ffffff; /* changed to white */
-  text-shadow: 0 0 15px #fff, 0 0 30px #ccc;
+  color: #ffffff;
+  text-shadow: none; /* removed glow */
   z-index: 2;
   text-align: center;
 }
@@ -122,7 +116,6 @@ canvas.width = W; canvas.height = H;
 let particles = [];
 let confettiStarted = false;
 
-// Get moon position for collision detection
 function getMoonRect() {
   const rect = moon.getBoundingClientRect();
   return {x: rect.left, y: rect.top, w: rect.width, h: rect.height};
@@ -175,7 +168,6 @@ function startConfetti() {
   confettiInterval = setInterval(drawConfetti,20);
 }
 
-// Detect if any confetti is over the moon
 let textChanged = false;
 function checkMoonCollision() {
   if(textChanged) return;
@@ -191,7 +183,6 @@ function checkMoonCollision() {
   }
 }
 
-// Moon click → start yellow moon + confetti
 moon.addEventListener("click", () => {
   moon.classList.add("yellow");
   startConfetti();

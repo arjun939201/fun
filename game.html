@@ -1,197 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Birthday Unlock</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Birthday Unlock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Orbitron:wght@700&display=swap" rel="stylesheet">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+}
 
-  <style>
-    /* Space background */
-    body {
-      margin: 0;
-      height: 100vh;
-      overflow: hidden;
-      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-    }
+/* Stars background */
+.stars, .stars::after {
+  content: "";
+  position: absolute;
+  top:0; left:0; right:0; bottom:0;
+  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+  animation: moveStars 200s linear infinite;
+}
+@keyframes moveStars {
+  from {background-position:0 0;}
+  to {background-position:-10000px 5000px;}
+}
 
-    /* Star field */
-    .stars, .stars::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
-      animation: moveStars 200s linear infinite;
-    }
-    @keyframes moveStars {
-      from {background-position: 0 0;}
-      to {background-position: -10000px 5000px;}
-    }
+/* Moon */
+#moon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, #ddd 70%);
+  box-shadow: 0 0 25px rgba(255,255,255,0.8);
+  cursor: pointer;
+  animation: twinkle 2s infinite alternate;
+  z-index: 2;
+}
+#moon.yellow {
+  background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d 70%);
+  box-shadow: 0 0 40px rgba(255, 235, 59, 0.9);
+  animation: none;
+}
 
-    /* Card box */
-    .unlock-box {
-      background: rgba(0,0,0,0.5);
-      padding: 2rem 3rem;
-      border-radius: 1.5rem;
-      text-align: center;
-      box-shadow: 0 0 25px rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px);
-      z-index: 2;
-    }
+@keyframes twinkle {
+  from {box-shadow:0 0 15px rgba(255,255,255,0.6);}
+  to {box-shadow:0 0 35px rgba(255,255,255,1);}
+}
 
-    /* Glowing button */
-    .glow-btn {
-      border: none;
-      outline: none;
-      color: #fff;
-      background: linear-gradient(45deg,#ff00cc,#3333ff);
-      padding: 0.75rem 2rem;
-      font-size: 1.3rem;
-      border-radius: 50px;
-      box-shadow: 0 0 20px rgba(255,0,200,0.7), 0 0 30px rgba(50,50,255,0.7);
-      transition: 0.3s;
-    }
-    .glow-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(255,0,200,1), 0 0 40px rgba(50,50,255,1);
-    }
+/* Telugu text */
+#touchText {
+  margin-top: 1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: #ffcccc;
+  text-shadow: 0 0 10px #ff0000;
+  z-index: 2;
+}
 
-    /* Locked text */
-    .locked {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2rem;
-      text-transform: uppercase;
-      color: #ff4f4f;
-      text-shadow: 0 0 15px #ff0000;
-    }
+/* Birthday text */
+#birthdayMsg {
+  display: none;
+  margin-top: 1.5rem;
+  font-family: 'Great Vibes', cursive;
+  font-size: 3rem;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
+  animation: glowPulse 2s infinite alternate, floatText 6s ease-in-out infinite;
+  z-index: 2;
+}
+@keyframes glowPulse {
+  from { text-shadow:0 0 10px #ff00ff, 0 0 20px #00ffff;}
+  to { text-shadow:0 0 30px #ff66ff, 0 0 50px #33ffff;}
+}
+@keyframes floatText {
+  0%,100% {transform: translateY(0);}
+  50% {transform: translateY(-20px);}
+}
 
-    /* Birthday text */
-    .birthday-text {
-      font-family: 'Great Vibes', cursive;
-      font-size: 4rem;
-      text-align: center;
-      color: #fff;
-      text-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
-      animation: glowPulse 2s infinite alternate, floatText 6s ease-in-out infinite;
-      z-index: 2;
-    }
-    @keyframes glowPulse {
-      from { text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff; }
-      to   { text-shadow: 0 0 30px #ff66ff, 0 0 50px #33ffff; }
-    }
-    @keyframes floatText {
-      0%,100% { transform: translateY(0);}
-      50% { transform: translateY(-20px);}
-    }
-
-    /* Confetti/particles */
-    canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-  </style>
+/* Confetti */
+canvas {
+  position: absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  pointer-events:none;
+  z-index:1;
+}
+</style>
 </head>
 <body>
-  <div class="stars"></div>
-  <canvas id="confetti"></canvas>
+<div class="stars"></div>
+<canvas id="confetti"></canvas>
 
-  <div id="unlockBox" class="unlock-box">
-    <button id="unlockBtn" class="glow-btn">Press</button>
-  </div>
+<div id="moon"></div>
+<div id="touchText">నన్ను ముట్టుకో</div>
+<div id="birthdayMsg">Happy Birthday Chinnu Mama</div>
 
-  <div id="wish" class="birthday-text" style="display:none;">
-    Happy Birthday Chinnu
-  </div>
+<script>
+const moon = document.getElementById("moon");
+const touchText = document.getElementById("touchText");
+const birthdayMsg = document.getElementById("birthdayMsg");
 
-  <div id="lockedMsg" class="locked" style="display:none;">
-    Locked
-  </div>
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+let W = window.innerWidth, H = window.innerHeight;
+canvas.width = W; canvas.height = H;
 
-  <script>
-    const unlockBtn = document.getElementById('unlockBtn');
-    const unlockBox = document.getElementById('unlockBox');
-    const wish = document.getElementById('wish');
-    const lockedMsg = document.getElementById('lockedMsg');
-    let presses = 0;
-    const maxPresses = 3;
+let particles = [];
+let confettiStarted = false;
 
-    unlockBtn.addEventListener('click', () => {
-      presses++;
-      if (presses === maxPresses) {
-        unlockBox.style.display = 'none';
-        wish.style.display = 'block';
-        startConfetti();
-      } else if (presses > maxPresses) {
-        unlockBox.style.display = 'none';
-        lockedMsg.style.display = 'block';
-      }
+// Get moon position for collision detection
+function getMoonRect() {
+  const rect = moon.getBoundingClientRect();
+  return {x: rect.left, y: rect.top, w: rect.width, h: rect.height};
+}
+
+function initConfetti() {
+  particles = [];
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: Math.random()*W,
+      y: Math.random()*H - H,
+      r: Math.random()*4+2,
+      d: Math.random()*W,
+      color: "hsl(" + Math.random()*360 + ",100%,50%)",
+      tilt: Math.floor(Math.random()*10) - 10
     });
+  }
+}
 
-    /* Confetti animation */
-    const canvas = document.getElementById("confetti");
-    const ctx = canvas.getContext("2d");
-    let W = window.innerWidth, H = window.innerHeight;
-    canvas.width = W; canvas.height = H;
+function drawConfetti() {
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x, p.y, p.r, p.r*3);
+    ctx.closePath();
+  });
+  updateConfetti();
+  checkMoonCollision();
+}
 
-    const particles = [];
-    for (let i = 0; i < 150; i++) {
-      particles.push({
-        x: Math.random()*W,
-        y: Math.random()*H - H,
-        r: Math.random()*4+1,
-        d: Math.random()*W,
-        color: "hsl(" + Math.random()*360 + ",100%,50%)",
-        tilt: Math.floor(Math.random()*10) - 10
-      });
+let angle = 0;
+function updateConfetti() {
+  angle += 0.01;
+  particles.forEach(p => {
+    p.y += Math.cos(angle+p.d) + 1 + p.r/2;
+    p.x += Math.sin(angle);
+    if(p.y > H){
+      p.y = -10;
+      p.x = Math.random()*W;
     }
+  });
+}
 
-    function drawConfetti() {
-      ctx.clearRect(0,0,W,H);
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.r, p.r*4);
-        ctx.closePath();
-      });
-      updateConfetti();
+let confettiInterval;
+function startConfetti() {
+  if(confettiStarted) return;
+  confettiStarted = true;
+  initConfetti();
+  confettiInterval = setInterval(drawConfetti,20);
+}
+
+// Detect if any confetti is over the moon
+let textChanged = false;
+function checkMoonCollision() {
+  if(textChanged) return;
+  const moonRect = getMoonRect();
+  for(let p of particles){
+    if(p.x >= moonRect.x && p.x <= moonRect.x + moonRect.w &&
+       p.y >= moonRect.y && p.y <= moonRect.y + moonRect.h){
+      touchText.style.display = "none";
+      birthdayMsg.style.display = "block";
+      textChanged = true;
+      break;
     }
+  }
+}
 
-    let angle = 0;
-    function updateConfetti() {
-      angle += 0.01;
-      particles.forEach(p => {
-        p.y += Math.cos(angle+p.d) + 1 + p.r/2;
-        p.x += Math.sin(angle);
-        if (p.y > H) {
-          p.y = -10; 
-          p.x = Math.random()*W;
-        }
-      });
-    }
+// Moon click → start yellow moon + confetti
+moon.addEventListener("click", () => {
+  moon.classList.add("yellow");
+  startConfetti();
+});
 
-    let confettiInterval;
-    function startConfetti() {
-      confettiInterval = setInterval(drawConfetti,20);
-    }
-
-    window.addEventListener("resize", () => {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      canvas.width = W;
-      canvas.height = H;
-    });
-  </script>
+window.addEventListener("resize", () => {
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+});
+</script>
 </body>
 </html>

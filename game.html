@@ -1,199 +1,208 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Birthday Unlock</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Orbitron:wght@700&display=swap" rel="stylesheet">
-
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  overflow: hidden;
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-  display: flex;
-  justify-content: flex-start; /* move content to top */
-  align-items: center;
-  flex-direction: column;
-  color: white;
-  padding-top: 50px; /* top padding */
-}
-
-/* Stars background */
-.stars, .stars::after {
-  content: "";
-  position: absolute;
-  top:0; left:0; right:0; bottom:0;
-  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
-  animation: moveStars 200s linear infinite;
-}
-@keyframes moveStars {
-  from {background-position:0 0;}
-  to {background-position:-10000px 5000px;}
-}
-
-/* Moon */
-#moon {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff, #ddd 70%);
-  cursor: pointer;
-  z-index: 2;
-  margin-bottom: 10px;
-}
-#moon.yellow {
-  background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d 70%);
-  box-shadow: 0 0 60px rgba(255, 235, 59, 1), 0 0 100px rgba(255, 235, 59, 0.6);
-  animation: none;
-}
-
-/* Telugu text */
-#touchText {
-  margin-top: 10px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.25rem; /* reduced size */
-  font-weight: bold;
-  color: #ffffff;
-  text-shadow: none; /* removed glow */
-  z-index: 2;
-  text-align: center;
-}
-
-/* Birthday text */
-#birthdayMsg {
-  display: none;
-  margin-top: 30px;
-  font-family: 'Great Vibes', cursive;
-  font-size: 3.5rem;
-  font-weight: bold;
-  color: #fff59d;
-  text-align: center;
-  line-height: 1.2;
-  text-shadow: 0 0 25px #ff00ff, 0 0 50px #00ffff;
-  animation: glowPulse 2s infinite alternate, floatText 6s ease-in-out infinite;
-  z-index: 2;
-}
-@keyframes glowPulse {
-  from { text-shadow: 0 0 15px #ff00ff, 0 0 30px #00ffff; }
-  to   { text-shadow: 0 0 35px #ff66ff, 0 0 60px #33ffff; }
-}
-@keyframes floatText {
-  0%,100% { transform: translateY(0);}
-  50% { transform: translateY(-15px);}
-}
-
-/* Confetti */
-canvas {
-  position: absolute;
-  top:0; left:0;
-  width:100%; height:100%;
-  pointer-events:none;
-  z-index:1;
-}
-</style>
-</head>
-<body>
-<div class="stars"></div>
-<canvas id="confetti"></canvas>
-
-<div id="moon"></div>
-<div id="touchText">దమ్ముంటే పట్టుకోరా☝️😏</div>
-<div id="birthdayMsg">Happy Birthday<br>Chinnu Mama</div>
-
-<script>
-const moon = document.getElementById("moon");
-const touchText = document.getElementById("touchText");
-const birthdayMsg = document.getElementById("birthdayMsg");
-
-const canvas = document.getElementById("confetti");
-const ctx = canvas.getContext("2d");
-let W = window.innerWidth, H = window.innerHeight;
-canvas.width = W; canvas.height = H;
-
-let particles = [];
-let confettiStarted = false;
-
-function getMoonRect() {
-  const rect = moon.getBoundingClientRect();
-  return {x: rect.left, y: rect.top, w: rect.width, h: rect.height};
-}
-
-function initConfetti() {
-  particles = [];
-  for (let i = 0; i < 150; i++) {
-    particles.push({
-      x: Math.random()*W,
-      y: Math.random()*H - H,
-      r: Math.random()*4+2,
-      d: Math.random()*W,
-      color: "hsl(" + Math.random()*360 + ",100%,50%)",
-      tilt: Math.floor(Math.random()*10) - 10
-    });
-  }
-}
-
-function drawConfetti() {
-  ctx.clearRect(0,0,W,H);
-  particles.forEach(p => {
-    ctx.beginPath();
-    ctx.fillStyle = p.color;
-    ctx.fillRect(p.x, p.y, p.r, p.r*3);
-    ctx.closePath();
-  });
-  updateConfetti();
-  checkMoonCollision();
-}
-
-let angle = 0;
-function updateConfetti() {
-  angle += 0.01;
-  particles.forEach(p => {
-    p.y += Math.cos(angle+p.d) + 1 + p.r/2;
-    p.x += Math.sin(angle);
-    if(p.y > H){
-      p.y = -10;
-      p.x = Math.random()*W;
-    }
-  });
-}
-
-let confettiInterval;
-function startConfetti() {
-  if(confettiStarted) return;
-  confettiStarted = true;
-  initConfetti();
-  confettiInterval = setInterval(drawConfetti,20);
-}
-
-let textChanged = false;
-function checkMoonCollision() {
-  if(textChanged) return;
-  const moonRect = getMoonRect();
-  for(let p of particles){
-    if(p.x >= moonRect.x && p.x <= moonRect.x + moonRect.w &&
-       p.y >= moonRect.y && p.y <= moonRect.y + moonRect.h){
-      touchText.style.display = "none";
-      birthdayMsg.style.display = "block";
-      textChanged = true;
-      break;
-    }
-  }
-}
-
-moon.addEventListener("click", () => {
-  moon.classList.add("yellow");
-  startConfetti();
-});
-
-window.addEventListener("resize", () => {
-  W = window.innerWidth;
-  H = window.innerHeight;
-  canvas.width = W;
-  canvas.height = H;
-});
-</script>
-</body>
-</html>
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<title>Birthday Unlock</title>  
+<meta name="viewport" content="width=device-width, initial-scale=1">  
+  
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Orbitron:wght@700&display=swap" rel="stylesheet">  
+  
+<style>  
+body {  
+  margin: 0;  
+  height: 100vh;  
+  overflow: hidden;  
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  flex-direction: column;  
+  color: white;  
+  padding-top :100px;  
+}  
+  
+/* Stars background */  
+.stars, .stars::after {  
+  content: "";  
+  position: absolute;  
+  top:0; left:0; right:0; bottom:0;  
+  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;  
+  animation: moveStars 200s linear infinite;  
+}  
+@keyframes moveStars {  
+  from {background-position:0 0;}  
+  to {background-position:-10000px 5000px;}  
+}  
+  
+/* Moon */  
+#moon {  
+  width: 150px;  
+  height: 150px;  
+  border-radius: 50%;  
+  background: radial-gradient(circle at 30% 30%, #fff, #ddd 70%);  
+  box-shadow: 0 0 35px rgba(255,255,255,0.9), 0 0 60px rgba(255,255,255,0.5);  
+  cursor: pointer;  
+  animation: twinkle 2s infinite alternate;  
+  z-index: 2;  
+  margin-bottom: 30px;  
+}  
+#moon.yellow {  
+  background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d 70%);  
+  box-shadow: 0 0 60px rgba(255, 235, 59, 1), 0 0 100px rgba(255, 235, 59, 0.6);  
+  animation: none;  
+}  
+@keyframes twinkle {  
+  from {box-shadow:0 0 20px rgba(255,255,255,0.6),0 0 40px rgba(255,255,255,0.3);}  
+  to {box-shadow:0 0 60px rgba(255,255,255,1),0 0 100px rgba(255,255,255,0.5);}  
+}  
+  
+/* Telugu text */  
+#touchText {  
+  margin-top: 20px;  
+  font-family: 'Orbitron', sans-serif;  
+  font-size: 1.5rem;  
+  font-weight: bold;  
+  color: #ffffff; /* changed to white */  
+  z-index: 2;  
+  text-align: center;  
+}  
+  
+/* Birthday text */  
+#birthdayMsg {  
+  display: none;  
+  margin-top: 30px;  
+  font-family: 'Great Vibes', cursive;  
+  font-size: 3.5rem;  
+  font-weight: bold;  
+  color: #fff59d;  
+  text-align: center;  
+  line-height: 1.2;  
+  text-shadow: 0 0 25px #ff00ff, 0 0 50px #00ffff;  
+  animation: glowPulse 2s infinite alternate, floatText 6s ease-in-out infinite;  
+  z-index: 2;  
+}  
+@keyframes glowPulse {  
+  from { text-shadow: 0 0 15px #ff00ff, 0 0 30px #00ffff; }  
+  to   { text-shadow: 0 0 35px #ff66ff, 0 0 60px #33ffff; }  
+}  
+@keyframes floatText {  
+  0%,100% { transform: translateY(0);}  
+  50% { transform: translateY(-15px);}  
+}  
+  
+/* Confetti */  
+canvas {  
+  position: absolute;  
+  top:0; left:0;  
+  width:100%; height:100%;  
+  pointer-events:none;  
+  z-index:1;  
+}  
+</style>  
+</head>  
+<body>  
+<div class="stars"></div>  
+<canvas id="confetti"></canvas>  
+  
+<div id="moon"></div>  
+<div id="touchText">దమ్ముంటే పట్టుకోరా☝️😏</div>  
+<div id="birthdayMsg">Happy Birthday<br>Chinnu Mama</div>  
+  
+<script>  
+const moon = document.getElementById("moon");  
+const touchText = document.getElementById("touchText");  
+const birthdayMsg = document.getElementById("birthdayMsg");  
+  
+const canvas = document.getElementById("confetti");  
+const ctx = canvas.getContext("2d");  
+let W = window.innerWidth, H = window.innerHeight;  
+canvas.width = W; canvas.height = H;  
+  
+let particles = [];  
+let confettiStarted = false;  
+  
+// Get moon position for collision detection  
+function getMoonRect() {  
+  const rect = moon.getBoundingClientRect();  
+  return {x: rect.left, y: rect.top, w: rect.width, h: rect.height};  
+}  
+  
+function initConfetti() {  
+  particles = [];  
+  for (let i = 0; i < 150; i++) {  
+    particles.push({  
+      x: Math.random()*W,  
+      y: Math.random()*H - H,  
+      r: Math.random()*4+2,  
+      d: Math.random()*W,  
+      color: "hsl(" + Math.random()*360 + ",100%,50%)",  
+      tilt: Math.floor(Math.random()*10) - 10  
+    });  
+  }  
+}  
+  
+function drawConfetti() {  
+  ctx.clearRect(0,0,W,H);  
+  particles.forEach(p => {  
+    ctx.beginPath();  
+    ctx.fillStyle = p.color;  
+    ctx.fillRect(p.x, p.y, p.r, p.r*3);  
+    ctx.closePath();  
+  });  
+  updateConfetti();  
+  checkMoonCollision();  
+}  
+  
+let angle = 0;  
+function updateConfetti() {  
+  angle += 0.01;  
+  particles.forEach(p => {  
+    p.y += Math.cos(angle+p.d) + 1 + p.r/2;  
+    p.x += Math.sin(angle);  
+    if(p.y > H){  
+      p.y = -10;  
+      p.x = Math.random()*W;  
+    }  
+  });  
+}  
+  
+let confettiInterval;  
+function startConfetti() {  
+  if(confettiStarted) return;  
+  confettiStarted = true;  
+  initConfetti();  
+  confettiInterval = setInterval(drawConfetti,20);  
+}  
+  
+// Detect if any confetti is over the moon  
+let textChanged = false;  
+function checkMoonCollision() {  
+  if(textChanged) return;  
+  const moonRect = getMoonRect();  
+  for(let p of particles){  
+    if(p.x >= moonRect.x && p.x <= moonRect.x + moonRect.w &&  
+       p.y >= moonRect.y && p.y <= moonRect.y + moonRect.h){  
+      touchText.style.display = "none";  
+      birthdayMsg.style.display = "block";  
+      textChanged = true;  
+      break;  
+    }  
+  }  
+}  
+  
+// Moon click → start yellow moon + confetti  
+moon.addEventListener("click", () => {  
+  moon.classList.add("yellow");  
+  startConfetti();  
+});  
+  
+window.addEventListener("resize", () => {  
+  W = window.innerWidth;  
+  H = window.innerHeight;  
+  canvas.width = W;  
+  canvas.height = H;  
+});  
+</script>  
+</body>  
+</html>  

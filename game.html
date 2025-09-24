@@ -20,6 +20,20 @@
       position: relative;
     }
 
+    /* Space animation layer */
+    .stars, .stars::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+      animation: moveStars 200s linear infinite;
+      z-index: 0;
+    }
+    @keyframes moveStars {
+      from {background-position: 0 0;}
+      to {background-position: -10000px 5000px;}
+    }
+
     /* Star buttons */
     .star-btn {
       width: 70px;
@@ -38,26 +52,26 @@
       transform: scale(1.2);
     }
 
-    /* Star positions (triangle layout) */
+    /* Triangle layout */
     #star1 { top: 20%; left: 50%; transform: translateX(-50%); }
     #star2 { bottom: 20%; left: 25%; }
     #star3 { bottom: 20%; right: 25%; }
 
-    /* Lines connecting stars */
+    /* Lines between stars */
     svg {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none;
-      z-index: 1;
+      z-index: 1; /* under text */
     }
     line {
       stroke: #fff;
       stroke-width: 3;
       stroke-dasharray: 300;
       stroke-dashoffset: 300;
-      animation: drawLine 1s forwards;
       filter: drop-shadow(0 0 8px #00ffff);
+      animation: drawLine 1s forwards;
     }
     @keyframes drawLine {
       to { stroke-dashoffset: 0; }
@@ -84,7 +98,7 @@
       50% { transform: translateY(-20px);}
     }
 
-    /* Confetti */
+    /* Confetti canvas */
     canvas {
       position: absolute;
       top: 0; left: 0;
@@ -95,7 +109,9 @@
   </style>
 </head>
 <body>
-  <!-- SVG lines -->
+  <div class="stars"></div>
+
+  <!-- Lines -->
   <svg id="lines">
     <line id="line12" x1="0" y1="0" x2="0" y2="0" style="display:none;"/>
     <line id="line23" x1="0" y1="0" x2="0" y2="0" style="display:none;"/>
@@ -110,7 +126,7 @@
   <!-- Confetti -->
   <canvas id="confetti"></canvas>
 
-  <!-- Birthday Wish -->
+  <!-- Wish -->
   <div id="wish" class="birthday-text">Happy Birthday Chinnu</div>
 
   <script>
@@ -119,24 +135,22 @@
       document.getElementById('star2'),
       document.getElementById('star3')
     ];
-
     const lines = {
       line12: document.getElementById('line12'),
       line23: document.getElementById('line23'),
       line31: document.getElementById('line31')
     };
-
     const wish = document.getElementById('wish');
-    const confettiCanvas = document.getElementById("confetti");
-    const ctx = confettiCanvas.getContext("2d");
+    const svg = document.getElementById('lines');
 
     let clicked = [];
 
     function getCenter(el) {
       const rect = el.getBoundingClientRect();
+      const svgRect = svg.getBoundingClientRect();
       return {
-        x: rect.left + rect.width/2,
-        y: rect.top + rect.height/2
+        x: rect.left + rect.width/2 - svgRect.left,
+        y: rect.top + rect.height/2 - svgRect.top
       };
     }
 
@@ -147,20 +161,17 @@
           star.classList.add('glowing');
 
           if (clicked.length === 2) {
-            // connect first -> second
             connectStars(stars[clicked[0]], stars[clicked[1]], lines.line12);
           } else if (clicked.length === 3) {
-            // connect second -> third
             connectStars(stars[clicked[1]], stars[clicked[2]], lines.line23);
-            // connect third -> first
             connectStars(stars[clicked[2]], stars[clicked[0]], lines.line31);
 
-            // Show wish + confetti
             setTimeout(() => {
               stars.forEach(s => s.style.display = 'none');
+              Object.values(lines).forEach(l => l.style.display = 'none'); // hide lines
               wish.style.display = 'block';
               startConfetti();
-            }, 1000);
+            }, 1200);
           }
         }
       });
@@ -177,8 +188,10 @@
     }
 
     /* Confetti */
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
     let W = window.innerWidth, H = window.innerHeight;
-    confettiCanvas.width = W; confettiCanvas.height = H;
+    canvas.width = W; canvas.height = H;
 
     const particles = [];
     for (let i = 0; i < 150; i++) {
@@ -194,10 +207,8 @@
     function drawConfetti() {
       ctx.clearRect(0,0,W,H);
       particles.forEach(p => {
-        ctx.beginPath();
         ctx.fillStyle = p.color;
         ctx.fillRect(p.x, p.y, p.r, p.r*4);
-        ctx.closePath();
       });
       updateConfetti();
     }
@@ -223,8 +234,8 @@
     window.addEventListener("resize", () => {
       W = window.innerWidth;
       H = window.innerHeight;
-      confettiCanvas.width = W;
-      confettiCanvas.height = H;
+      canvas.width = W;
+      canvas.height = H;
     });
   </script>
 </body>

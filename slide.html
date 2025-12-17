@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Magic Spark Wish – Slides</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    background: radial-gradient(circle, #111, #000);
+    height: 100vh;
+    overflow: hidden;
+    font-family: "Nunito", sans-serif;
+    user-select: none;
+  }
+
+  /* SLIDE CONTAINER */
+  .slide-container {
+    position: absolute;
+    top: 16%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .slide {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 2s ease, transform 2s ease;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .text {
+    color: #ffd87a;
+    font-weight: 700;
+    margin-bottom: 18px;
+    text-shadow:
+      0 0 18px rgba(255,215,120,1),
+      0 0 45px rgba(255,160,60,0.9),
+      0 0 90px rgba(255,120,30,0.8);
+  }
+
+  .text.first { font-size: 4.2em; }
+  .text.other { font-size: 2.6em; }
+
+  .image {
+    width: 260px;
+    max-width: 80%;
+    border-radius: 18px;
+    box-shadow:
+      0 0 20px rgba(255,180,80,0.8),
+      0 0 60px rgba(255,120,30,0.6);
+  }
+
+  /* SPARKS */
+  .spark {
+    position: absolute;
+    bottom: 0;
+    width: 5px;
+    height: 5px;
+    background: radial-gradient(circle, #fff6a5, #ffb347, red);
+    border-radius: 50%;
+    animation-name: sparkUp, sparkGlow;
+    animation-timing-function: linear, ease-in-out;
+    animation-fill-mode: forwards;
+    box-shadow:
+      0 0 6px #ffcc66,
+      0 0 14px orange;
+  }
+
+  @keyframes sparkUp {
+    from { transform: translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    to { transform: translateY(-85vh); opacity: 0; }
+  }
+
+  @keyframes sparkGlow {
+    0% { filter: brightness(0.6); }
+    30% { filter: brightness(1.4); }
+    60% { filter: brightness(0.8); }
+    100% { filter: brightness(1.2); }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="slide-container">
+
+  <div class="slide active">
+    <div class="text first">oye.. my pgli 😌</div>
+    <img src="image1.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">tum jaisi dost ke liye,<br>main khud ko lucky maanta hoon 🥰</div>
+    <img src="image2.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">sach mein bahut sweet aur pyaari ho 🤗</div>
+    <img src="image3.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">aur haan… tum sabse best ho,<br>ekdum diamond ho 💛</div>
+    <img src="image4.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">isliye hi toh,<br>hamesha mera lovely dost tum ho 😽</div>
+    <img src="image5.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">hamesha khush rehna,<br>aur apna khayal rakhna pglo 🥹</div>
+    <img src="image6.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">bhoolna mat,<br>hum ant tak saath rahenge 🫣</div>
+    <img src="image7.jpg" class="image">
+  </div>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll(".slide");
+let current = 0;
+
+/* SPARKS */
+function createSpark() {
+  const spark = document.createElement("div");
+  spark.className = "spark";
+
+  const duration = 5 + Math.random() * 3;
+  const glowDuration = 1 + Math.random() * 1.5;
+
+  spark.style.left = Math.random() * 100 + "vw";
+  spark.style.animationDuration = `${duration}s, ${glowDuration}s`;
+  spark.style.animationIterationCount = `1, infinite`;
+
+  document.body.appendChild(spark);
+  spark.addEventListener("animationend", () => spark.remove());
+}
+
+setInterval(createSpark, 220);
+
+/* SLIDE SHOW */
+function showNextSlide() {
+  slides[current].classList.remove("active");
+  current = (current + 1) % slides.length;
+  slides[current].classList.add("active");
+}
+
+setInterval(showNextSlide, 5000); // change slide every 5s
+</script>
+
+</body>
+</html>

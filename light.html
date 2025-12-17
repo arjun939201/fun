@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Magic Match Wish</title>
 
-<!-- Readable Beautiful Font -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -13,45 +12,23 @@
     background: radial-gradient(circle, #111, #000);
     height: 100vh;
     overflow: hidden;
-    user-select: none;
     font-family: "Nunito", sans-serif;
+    user-select: none;
   }
 
   .instruction {
     position: absolute;
-    top: 10px;
+    top: 14px;
     width: 100%;
     text-align: center;
     color: #ffcc66;
-    font-size: 1.7em;
+    font-size: 1.8em;
     opacity: 0.9;
   }
 
-  /* MATCH SLOT (DROP AREA) */
-  .drop-zone {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 28px;
-    height: 110px;
-    border-radius: 12px;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 200, 120, 0.15),
-      rgba(255, 140, 60, 0.35),
-      rgba(255, 200, 120, 0.15)
-    );
-    box-shadow:
-      0 0 12px rgba(255, 180, 80, 0.7),
-      inset 0 0 10px rgba(255, 150, 60, 0.8);
-    pointer-events: none;
-  }
-
-  /* TEXT */
   .text-box {
     position: absolute;
-    top: 30%;
+    top: 32%;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -61,52 +38,53 @@
   .line {
     color: #ffd87a;
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(30px);
     margin: 22px 0;
     font-weight: 700;
     text-shadow:
-      0 0 14px rgba(255, 215, 120, 1),
-      0 0 40px rgba(255, 160, 60, 0.9),
-      0 0 80px rgba(255, 120, 30, 0.8);
-    transition:
-      opacity 2.2s ease,
-      transform 2.2s ease;
+      0 0 18px rgba(255,215,120,1),
+      0 0 50px rgba(255,160,60,1),
+      0 0 100px rgba(255,120,30,0.9);
+    transition: opacity 2.2s ease, transform 2.2s ease;
   }
 
-  .line.first {
-    font-size: 4.4em;
-  }
+  .line.first { font-size: 4.5em; }
+  .line.other { font-size: 2.8em; }
 
-  .line.other {
-    font-size: 2.7em;
-  }
-
-  /* MATCH STICK */
   .match {
     position: absolute;
     width: 22px;
     height: 90px;
     left: 50%;
-    top: 60px;
+    top: 70px;
     transform: translateX(-50%);
     background: linear-gradient(to bottom, #ffb347, #3b2b1f);
     border-radius: 5px;
-    box-shadow: 0 0 25px rgba(255, 130, 0, 1);
-    touch-action: none;
+    box-shadow: 0 0 30px rgba(255,130,0,1);
     cursor: grab;
+    touch-action: none;
     z-index: 10;
+    transition: top 0.4s ease;
   }
 
   .fire {
     position: absolute;
-    top: -38px;
+    top: -28px;
     left: 50%;
-    width: 30px;
-    height: 50px;
+    width: 18px;
+    height: 18px;
     background: radial-gradient(circle, #fff6a5, orange, red);
     border-radius: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(0);
+    transition: transform 0.4s ease;
+  }
+
+  .fire.active {
+    width: 34px;
+    height: 54px;
+    top: -40px;
     animation: flicker 0.18s infinite alternate;
+    transform: translateX(-50%) scale(1);
   }
 
   @keyframes flicker {
@@ -114,14 +92,13 @@
     to   { transform: translateX(-50%) scale(1.15); }
   }
 
-  /* FLOATING GLOW PARTICLES */
   .particle {
     position: absolute;
     width: 6px;
     height: 6px;
     background: rgba(255, 200, 120, 0.8);
     border-radius: 50%;
-    animation: floatUp 9s linear infinite;
+    animation: floatUp 10s linear infinite;
   }
 
   @keyframes floatUp {
@@ -134,95 +111,60 @@
 
 <body>
 
-<div class="instruction">matchstick neeche le jao</div>
-
-<div class="drop-zone"></div>
+<div class="instruction" id="instruction">matchstick jalao 🔥</div>
 
 <div class="text-box">
-<div class="line first">oye.. my pgli ✨</div>
-
-<div class="line other">
-pgli, tum sach mein bahut sweet ho 🥰
-</div>
-
-<div class="line other">
-tum jaisi dost ke liye,
-main khud ko lucky maanta hoon 😌
-</div>
-
-<div class="line other">
-aur haan… tum sabse best ho,
-ekdum diamond ho 💛
-</div>
-
-<div class="line other">
-isliye hi toh,
-mera lovely dost tum ho 😍😽
-</div>
-
-<div class="line other">
-hamesha khush rehna,
-aur apna khayal rakhna pglo 🥹
-</div>
+  <div class="line first">oye.. my pgli ✨</div>
+  <div class="line other">pgli, tum sach mein bahut sweet ho 🥰</div>
+  <div class="line other">tum jaisi dost ke liye,<br>main khud ko lucky maanta hoon 😌</div>
+  <div class="line other">aur haan… tum sabse best ho,<br>ekdum diamond ho 💛</div>
+  <div class="line other">isliye hi toh,<br>mera lovely dost tum ho 😍😽</div>
+  <div class="line other">hamesha khush rehna,<br>aur apna khayal rakhna pglo 🥹</div>
 </div>
 
 <div class="match" id="match">
-  <div class="fire"></div>
+  <div class="fire" id="fire"></div>
 </div>
 
 <script>
 const match = document.getElementById("match");
+const fire = document.getElementById("fire");
+const instruction = document.getElementById("instruction");
 const lines = document.querySelectorAll(".line");
-const dropZone = document.querySelector(".drop-zone");
 
-let offsetX = 0, offsetY = 0;
 let dragging = false;
-let locked = false;
+let offsetY = 0;
+let started = false;
 
-/* Create particles */
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < 30; i++) {
   const p = document.createElement("div");
   p.className = "particle";
   p.style.left = Math.random() * 100 + "vw";
-  p.style.animationDelay = Math.random() * 9 + "s";
+  p.style.animationDelay = Math.random() * 10 + "s";
   document.body.appendChild(p);
 }
 
 function startDrag(e) {
-  if (locked) return;
+  if (started) return;
   dragging = true;
   const r = match.getBoundingClientRect();
   const p = e.touches ? e.touches[0] : e;
-  offsetX = p.clientX - r.left;
   offsetY = p.clientY - r.top;
 }
 
 function drag(e) {
-  if (!dragging || locked) return;
+  if (!dragging || started) return;
   const p = e.touches ? e.touches[0] : e;
-  match.style.left = (p.clientX - offsetX) + "px";
-  match.style.top = (p.clientY - offsetY) + "px";
-  checkDrop();
+  const newTop = p.clientY - offsetY;
+  match.style.top = newTop + "px";
+  if (newTop > window.innerHeight * 0.22) ignite();
 }
 
-function checkDrop() {
-  const m = match.getBoundingClientRect();
-  const d = dropZone.getBoundingClientRect();
-  if (
-    m.left > d.left &&
-    m.right < d.right &&
-    m.top > d.top &&
-    m.bottom < d.bottom
-  ) {
-    lockMatch();
-  }
-}
-
-function lockMatch() {
-  locked = true;
-  match.style.left = "50%";
-  match.style.top = "26%";
-  match.style.transform = "translateX(-50%)";
+function ignite() {
+  started = true;
+  fire.classList.add("active");
+  instruction.innerText = "✨ magic begins ✨";
+  match.style.top = "25%";
   revealText();
 }
 

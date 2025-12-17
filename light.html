@@ -1,22 +1,11 @@
-Here is the FULL UPDATED WORKING CODE
-✔ elements moved slightly upward
-✔ looks visually centered
-✔ beautiful fonts added (Dancing Script + Poppins)
-✔ no logic broken
-
-Just copy–paste and run ❤️
-
-
----
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Magic Match Wish</title>
 
-<!-- Beautiful Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<!-- Readable Beautiful Font -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
   body {
@@ -25,18 +14,18 @@ Just copy–paste and run ❤️
     height: 100vh;
     overflow: hidden;
     user-select: none;
-    font-family: "Poppins", sans-serif;
+    font-family: "Nunito", sans-serif;
   }
 
   .instruction {
     position: absolute;
-    top: 8px;
+    top: 10px;
     width: 100%;
     text-align: center;
     color: #ffcc66;
-    font-size: 1.8em;
+    font-size: 1.6em;
     opacity: 0.9;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
   }
 
   .drop-zone {
@@ -46,7 +35,7 @@ Just copy–paste and run ❤️
     transform: translateX(-50%);
     width: 180px;
     height: 160px;
-    border: 2px dashed rgba(255,180,80,0.5);
+    border: 2px dashed rgba(255,180,80,0.45);
     border-radius: 14px;
     box-shadow: 0 0 30px rgba(255,150,50,0.35);
     pointer-events: none;
@@ -62,27 +51,26 @@ Just copy–paste and run ❤️
   }
 
   .line {
-    font-family: "Dancing Script", cursive;
     color: gold;
     opacity: 0;
-    filter: blur(14px);
-    margin: 20px 0;
-    letter-spacing: 1px;
+    transform: translateY(20px);
+    margin: 18px 0;
+    font-weight: 600;
     text-shadow:
-      0 0 12px gold,
-      0 0 40px orange,
-      0 0 80px red;
-    transition: opacity 2.2s ease, filter 2.2s ease;
+      0 0 10px gold,
+      0 0 30px orange;
+    transition:
+      opacity 2s ease,
+      transform 2s ease;
   }
 
   .line.first {
-    font-size: 4.5em;
+    font-size: 3.8em;
     font-weight: 700;
   }
 
   .line.other {
-    font-size: 2.7em;
-    font-weight: 600;
+    font-size: 2.2em;
   }
 
   .match {
@@ -94,9 +82,10 @@ Just copy–paste and run ❤️
     transform: translateX(-50%);
     background: linear-gradient(to bottom, #ffb347, #3b2b1f);
     border-radius: 4px;
-    box-shadow: 0 0 22px rgba(255, 100, 0, 0.9);
+    box-shadow: 0 0 22px rgba(255, 120, 0, 0.9);
     touch-action: none;
     cursor: grab;
+    z-index: 10;
   }
 
   .fire {
@@ -114,6 +103,28 @@ Just copy–paste and run ❤️
   @keyframes flicker {
     from { transform: translateX(-50%) scale(1); }
     to   { transform: translateX(-50%) scale(1.15); }
+  }
+
+  /* Floating particles */
+  .particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 200, 120, 0.8);
+    border-radius: 50%;
+    animation: floatUp 8s linear infinite;
+  }
+
+  @keyframes floatUp {
+    from {
+      transform: translateY(100vh);
+      opacity: 0;
+    }
+    10% { opacity: 1; }
+    to {
+      transform: translateY(-20vh);
+      opacity: 0;
+    }
   }
 </style>
 </head>
@@ -146,6 +157,16 @@ let offsetX = 0, offsetY = 0;
 let dragging = false;
 let locked = false;
 
+// Particles
+for (let i = 0; i < 25; i++) {
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random() * 100 + "vw";
+  p.style.animationDelay = Math.random() * 8 + "s";
+  p.style.opacity = Math.random();
+  document.body.appendChild(p);
+}
+
 function startDrag(e) {
   if (locked) return;
   dragging = true;
@@ -158,23 +179,15 @@ function startDrag(e) {
 function drag(e) {
   if (!dragging || locked) return;
   const p = e.touches ? e.touches[0] : e;
-
   match.style.left = (p.clientX - offsetX) + "px";
   match.style.top = (p.clientY - offsetY) + "px";
-
   checkDrop();
 }
 
 function checkDrop() {
   const m = match.getBoundingClientRect();
   const d = dropZone.getBoundingClientRect();
-
-  if (
-    m.left > d.left &&
-    m.right < d.right &&
-    m.top > d.top &&
-    m.bottom < d.bottom
-  ) {
+  if (m.left > d.left && m.right < d.right && m.top > d.top && m.bottom < d.bottom) {
     lockMatch();
   }
 }
@@ -184,7 +197,6 @@ function lockMatch() {
   match.style.left = "50%";
   match.style.top = "26%";
   match.style.transform = "translateX(-50%)";
-
   revealText();
 }
 
@@ -193,8 +205,8 @@ function revealText() {
   lines.forEach(line => {
     setTimeout(() => {
       line.style.opacity = 1;
-      line.style.filter = "blur(0)";
-    }, delay += 2600);
+      line.style.transform = "translateY(0)";
+    }, delay += 2200);
   });
 }
 
@@ -212,10 +224,3 @@ document.addEventListener("touchend", endDrag);
 
 </body>
 </html>
-
-
----
-
-If you want next: ✨ heart particles 🔥 fire sparks 🎶 soft background music 📱 perfect mobile scaling
-
-Just say the word 💛

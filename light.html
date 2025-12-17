@@ -14,38 +14,58 @@
     font-family: "Segoe UI", sans-serif;
   }
 
-  /* Instruction */
   .instruction {
     position: absolute;
-    top: 15px;
+    top: 12px;
     width: 100%;
     text-align: center;
     color: #ffcc66;
     font-size: 1.2em;
-    opacity: 0.8;
+    opacity: 0.9;
     letter-spacing: 1px;
   }
 
-  /* Text container */
+  /* Drop zone */
+  .drop-zone {
+    position: absolute;
+    top: 26%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 140px;
+    border: 2px dashed rgba(255,180,80,0.5);
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(255,150,50,0.3);
+    pointer-events: none;
+  }
+
   .text-box {
     position: absolute;
     top: 35%;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
+    pointer-events: none;
   }
 
   .line {
-    font-size: 2.2em;
     color: gold;
     opacity: 0;
-    filter: blur(10px);
-    margin: 12px 0;
+    filter: blur(12px);
+    margin: 16px 0;
     text-shadow:
       0 0 10px gold,
       0 0 30px orange,
       0 0 60px red;
-    transition: opacity 0.4s linear;
+    transition: opacity 1.2s linear, filter 1.2s linear;
+  }
+
+  .line.first {
+    font-size: 3.2em;
+  }
+
+  .line.other {
+    font-size: 2.2em;
   }
 
   .match {
@@ -53,24 +73,24 @@
     width: 22px;
     height: 90px;
     left: 50%;
-    top: 80px;
+    top: 90px;
     transform: translateX(-50%);
     background: linear-gradient(to bottom, #ffb347, #3b2b1f);
     border-radius: 4px;
-    box-shadow: 0 0 18px rgba(255, 100, 0, 0.9);
+    box-shadow: 0 0 20px rgba(255, 100, 0, 0.9);
     touch-action: none;
   }
 
   .fire {
     position: absolute;
-    top: -35px;
+    top: -36px;
     left: 50%;
-    width: 26px;
-    height: 45px;
-    background: radial-gradient(circle, #fff176, orange, red);
+    width: 28px;
+    height: 48px;
+    background: radial-gradient(circle, #fff6a5, orange, red);
     border-radius: 50%;
     transform: translateX(-50%);
-    animation: flicker 0.15s infinite alternate;
+    animation: flicker 0.18s infinite alternate;
   }
 
   @keyframes flicker {
@@ -83,12 +103,13 @@
 <body>
 
 <div class="instruction">matchstick neeche le jao</div>
+<div class="drop-zone"></div>
 
 <div class="text-box" id="textBox">
-  <div class="line" id="line1">Wish my pgli</div>
-  <div class="line" id="line2">pgli tum bahut sweet ho</div>
-  <div class="line" id="line3">main khushnaseeb hoon tum jaisi dost ke liye</div>
-  <div class="line" id="line4">tum sabse best ho</div>
+  <div class="line first" id="line1">Wish my pgli ✨</div>
+  <div class="line other">pgli tum sach mein bahut hi sweet ho</div>
+  <div class="line other">main khud ko lucky maanta hoon tum jaisi dost ke liye</div>
+  <div class="line other">aur haan… tum sabse best ho 💛</div>
 </div>
 
 <div class="match" id="match">
@@ -97,18 +118,17 @@
 
 <script>
 const match = document.getElementById("match");
+const line1 = document.getElementById("line1");
 const lines = document.querySelectorAll(".line");
-const firstLine = document.getElementById("line1");
-const textBox = document.getElementById("textBox");
+const dropZone = document.querySelector(".drop-zone");
 
 let offsetX = 0, offsetY = 0;
 let dragging = false;
-let sequenceStarted = false;
-
-const GLOW_PADDING = 40;
-const START_GLOW_DISTANCE = 120;
+let locked = false;
+let revealed = false;
 
 function startDrag(e) {
+  if (locked) return;
   dragging = true;
   const r = match.getBoundingClientRect();
   const p = e.touches ? e.touches[0] : e;
@@ -117,72 +137,68 @@ function startDrag(e) {
 }
 
 function drag(e) {
-  if (!dragging) return;
+  if (!dragging || locked) return;
   const p = e.touches ? e.touches[0] : e;
 
   let x = p.clientX - offsetX;
   let y = p.clientY - offsetY;
 
-  const t = textBox.getBoundingClientRect();
-  const m = match.getBoundingClientRect();
-
-  const expanded = {
-    left: t.left - GLOW_PADDING,
-    right: t.right + GLOW_PADDING,
-    top: t.top - GLOW_PADDING,
-    bottom: t.bottom + GLOW_PADDING
-  };
-
-  // Block entry into text area
-  if (
-    x + m.width > expanded.left &&
-    x < expanded.right &&
-    y + m.height > expanded.top &&
-    y < expanded.bottom
-  ) return;
-
   match.style.left = x + "px";
   match.style.top = y + "px";
 
-  glowFirstLine();
+  checkDrop();
 }
 
-function glowFirstLine() {
-  const t = firstLine.getBoundingClientRect();
+function checkDrop() {
   const m = match.getBoundingClientRect();
+  const d = dropZone.getBoundingClientRect();
 
-  const dx = Math.max(
-    (t.left - GLOW_PADDING) - m.right,
-    m.left - (t.right + GLOW_PADDING),
-    0
-  );
-  const dy = Math.max(
-    (t.top - GLOW_PADDING) - m.bottom,
-    m.top - (t.bottom + GLOW_PADDING),
-    0
-  );
-
-  const distance = Math.hypot(dx, dy);
-  let glow = 1 - distance / START_GLOW_DISTANCE;
-  glow = Math.min(Math.max(glow, 0), 1);
-
-  firstLine.style.opacity = glow;
-  firstLine.style.filter = `blur(${10 - glow * 10}px)`;
-
-  if (glow === 1 && !sequenceStarted) {
-    sequenceStarted = true;
-    revealOthers();
+  if (
+    m.left > d.left &&
+    m.right < d.right &&
+    m.top > d.top &&
+    m.bottom < d.bottom
+  ) {
+    lockMatch();
   }
 }
 
-function revealOthers() {
-  let delay = 0;
+function lockMatch() {
+  locked = true;
+  match.style.left = "50%";
+  match.style.top = "30%";
+  match.style.transform = "translateX(-50%)";
+
+  glowAndReveal();
+}
+
+function glowAndReveal() {
+  line1.style.opacity = 1;
+  line1.style.filter = "blur(0)";
+
+  let delay = 1200;
   for (let i = 1; i < lines.length; i++) {
     setTimeout(() => {
       lines[i].style.opacity = 1;
       lines[i].style.filter = "blur(0)";
-    }, delay += 700);
+    }, delay += 1200);
   }
+
+  setTimeout(speakText, delay + 500);
+}
+
+function speakText() {
+  if (!("speechSynthesis" in window)) return;
+
+  const msg = new SpeechSynthesisUtterance(
+    "Wish my pagli. Pagli tum sach mein bahut hi sweet ho. " +
+    "Main khud ko lucky maanta hoon tum jaisi dost ke liye. " +
+    "Aur haan, tum sabse best ho."
+  );
+  msg.rate = 0.85;
+  msg.pitch = 1.1;
+  msg.volume = 0.8;
+  speechSynthesis.speak(msg);
 }
 
 function endDrag() {

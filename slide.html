@@ -16,7 +16,57 @@
     user-select: none;
   }
 
-  /* SLIDE CONTAINER */
+  /* INTRO SCREEN */
+  .intro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    z-index: 5;
+    transition: opacity 2s ease;
+  }
+
+  .intro.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .intro-title {
+    color: #ffffff;
+    font-size: 4em;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255,255,255,0.4);
+  }
+
+  .intro-btn {
+    padding: 14px 40px;
+    font-size: 1.8em;
+    font-weight: 700;
+    border-radius: 40px;
+    border: none;
+    background: #111;
+    color: #bbb;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    transition: 
+      color 1.2s ease,
+      box-shadow 2.2s ease,
+      background 1.2s ease;
+  }
+
+  .intro-btn.glow {
+    color: #ffd87a;
+    background: #222;
+    box-shadow:
+      0 0 30px rgba(255,215,120,0.9),
+      0 0 80px rgba(255,180,80,1),
+      0 0 160px rgba(255,120,30,1);
+  }
+
+  /* SLIDES */
   .slide-container {
     position: absolute;
     top: 16%;
@@ -25,6 +75,12 @@
     width: 100%;
     text-align: center;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+
+  .slide-container.show {
+    opacity: 1;
   }
 
   .slide {
@@ -95,9 +151,16 @@
 
 <body>
 
-<div class="slide-container">
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <div class="intro-title">ready ho?</div>
+  <button class="intro-btn" id="startBtn">haan chalo</button>
+</div>
 
-  <div class="slide active">
+<!-- SLIDES -->
+<div class="slide-container" id="slides">
+
+  <div class="slide">
     <div class="text first">oye.. my pgli 😌</div>
     <img src="image1.jpg" class="image">
   </div>
@@ -135,36 +198,56 @@
 </div>
 
 <script>
+const intro = document.getElementById("intro");
+const startBtn = document.getElementById("startBtn");
+const slideBox = document.getElementById("slides");
 const slides = document.querySelectorAll(".slide");
+
 let current = 0;
+let started = false;
 
 /* SPARKS */
 function createSpark() {
   const spark = document.createElement("div");
   spark.className = "spark";
-
-  const duration = 5 + Math.random() * 3;
-  const glowDuration = 1 + Math.random() * 1.5;
-
   spark.style.left = Math.random() * 100 + "vw";
-  spark.style.animationDuration = `${duration}s, ${glowDuration}s`;
-  spark.style.animationIterationCount = `1, infinite`;
-
+  spark.style.animationDuration = `${5 + Math.random() * 3}s, ${1 + Math.random() * 1.5}s`;
+  spark.style.animationIterationCount = "1, infinite";
   document.body.appendChild(spark);
   spark.addEventListener("animationend", () => spark.remove());
 }
 
 setInterval(createSpark, 220);
 
-/* SLIDE SHOW */
-function showNextSlide() {
-  slides[current].classList.remove("active");
-  current = (current + 1) % slides.length;
-  slides[current].classList.add("active");
-}
+/* START SEQUENCE */
+startBtn.addEventListener("click", () => {
+  if (started) return;
+  started = true;
 
-setInterval(showNextSlide, 5000); // change slide every 5s
+  startBtn.classList.add("glow");
+
+  setTimeout(() => {
+    intro.classList.add("hide");
+    slideBox.classList.add("show");
+    slides[0].classList.add("active");
+    startSlides();
+  }, 2000);
+});
+
+function startSlides() {
+  setInterval(() => {
+    slides[current].classList.remove("active");
+    current = (current + 1) % slides.length;
+    slides[current].classList.add("active");
+  }, 5000);
+}
 </script>
 
 </body>
 </html>
+
+If you want next: ✨ last slide stays forever
+💖 final spark burst
+📱 mobile-perfect spacing
+
+Just tell me 👍

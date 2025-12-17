@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Magic Match Wish</title>
+<title>Magic Spark Wish</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -24,149 +24,126 @@
     color: #ffcc66;
     font-size: 1.8em;
     opacity: 0.9;
+    transition: opacity 1s ease;
   }
 
-  /* POEM CONTAINER – TOP CENTER */
+  /* POEM TOP CENTER */
   .text-box {
     position: absolute;
     top: 18%;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-    pointer-events: none;
     width: 100%;
+    pointer-events: none;
   }
 
   .line {
     color: #ffd87a;
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(22px);
     margin: 18px 0;
     font-weight: 700;
     text-shadow:
-      0 0 18px rgba(255,215,120,1),
-      0 0 50px rgba(255,160,60,1),
-      0 0 100px rgba(255,120,30,0.9);
+      0 0 22px rgba(255,215,120,1),
+      0 0 60px rgba(255,160,60,1),
+      0 0 120px rgba(255,120,30,1);
     transition: opacity 2s ease, transform 2s ease;
   }
 
   .line.first { font-size: 4.2em; }
   .line.other { font-size: 2.6em; }
 
-  /* MATCH */
-  .match {
+  /* FLAME BASE (BOTTOM 5%) */
+  .flame-base {
     position: absolute;
-    width: 22px;
-    height: 90px;
-    left: 50%;
-    bottom: 12%;
-    transform: translateX(-50%);
-    background: linear-gradient(to bottom, #ffb347, #3b2b1f);
-    border-radius: 5px;
-    box-shadow: 0 0 30px rgba(255,130,0,1);
-    cursor: grab;
-    touch-action: none;
-    z-index: 10;
+    bottom: 0;
+    width: 100%;
+    height: 5%;
+    background: radial-gradient(circle at center bottom,
+      rgba(255,180,80,0.9),
+      rgba(255,120,30,0.6),
+      transparent 70%);
+    filter: blur(8px);
+    animation: flamePulse 1.5s infinite alternate;
   }
 
-  .fire {
+  @keyframes flamePulse {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+  }
+
+  /* SPARKS */
+  .spark {
     position: absolute;
-    top: -28px;
-    left: 50%;
-    width: 18px;
-    height: 18px;
-    background: radial-gradient(circle, #fff6a5, orange, red);
-    border-radius: 50%;
-    transform: translateX(-50%) scale(0);
-    transition: transform 0.4s ease;
-  }
-
-  .fire.active {
-    width: 34px;
-    height: 54px;
-    top: -40px;
-    animation: flicker 0.18s infinite alternate;
-    transform: translateX(-50%) scale(1);
-  }
-
-  @keyframes flicker {
-    from { transform: translateX(-50%) scale(1); }
-    to   { transform: translateX(-50%) scale(1.15); }
-  }
-
-  /* PARTICLES */
-  .particle {
-    position: absolute;
+    bottom: 5%;
     width: 6px;
     height: 6px;
-    background: rgba(255, 200, 120, 0.8);
+    background: radial-gradient(circle, #fff6a5, #ffb347, red);
     border-radius: 50%;
-    animation: floatUp 10s linear infinite;
+    box-shadow:
+      0 0 12px #ffcc66,
+      0 0 24px orange,
+      0 0 48px red;
+    animation: sparkUp linear forwards;
   }
 
-  @keyframes floatUp {
-    from { transform: translateY(100vh); opacity: 0; }
-    15% { opacity: 1; }
-    to { transform: translateY(-20vh); opacity: 0; }
+  @keyframes sparkUp {
+    from {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-85vh) scale(0.6);
+      opacity: 0;
+    }
   }
 </style>
 </head>
 
 <body>
 
-<div class="instruction" id="instruction">matchstick jalao 🔥</div>
+<div class="instruction" id="instruction">watch the sparks ✨</div>
 
 <div class="text-box">
-  <div class="line first">oye.. my pgli 😌 </div>
-  <div class="line other">tum jaisi dost ke liye,<br>main khud ko lucky maanta hoon 🥰 </div>
-  <div class="line other">sach mein bahut sweet aur pyaari ho 🤗 </div>
+  <div class="line first">oye.. my pgli 😌</div>
+  <div class="line other">tum jaisi dost ke liye,<br>main khud ko lucky maanta hoon 🥰</div>
+  <div class="line other">sach mein bahut sweet aur pyaari ho 🤗</div>
   <div class="line other">aur haan… tum sabse best ho,<br>ekdum diamond ho 💛</div>
   <div class="line other">isliye hi toh,<br>hamesha mera lovely dost tum ho 😽</div>
   <div class="line other">hamesha khush rehna,<br>aur apna khayal rakhna pglo 🥹</div>
-    <div class="line other"> Bulna jao hum anth tak saat rehenge 🫣</div>
+  <div class="line other">bhoolna mat, hum ant tak saath rahenge 🫣</div>
 </div>
 
-<div class="match" id="match">
-  <div class="fire" id="fire"></div>
-</div>
+<div class="flame-base"></div>
 
 <script>
-const match = document.getElementById("match");
-const fire = document.getElementById("fire");
-const instruction = document.getElementById("instruction");
 const lines = document.querySelectorAll(".line");
+const instruction = document.getElementById("instruction");
 
-let dragging = false;
 let started = false;
-let startY = 0;
+let sparkInterval;
 
-/* particles */
-for (let i = 0; i < 30; i++) {
-  const p = document.createElement("div");
-  p.className = "particle";
-  p.style.left = Math.random() * 100 + "vw";
-  p.style.animationDelay = Math.random() * 10 + "s";
-  document.body.appendChild(p);
+/* CREATE SPARK */
+function createSpark() {
+  const spark = document.createElement("div");
+  spark.className = "spark";
+  spark.style.left = Math.random() * 100 + "vw";
+  spark.style.animationDuration = (2 + Math.random() * 1.5) + "s";
+  document.body.appendChild(spark);
+
+  spark.addEventListener("animationend", () => spark.remove());
 }
 
-function startDrag(e) {
+/* START SPARKS */
+function startSparks() {
   if (started) return;
-  dragging = true;
-  const p = e.touches ? e.touches[0] : e;
-  startY = p.clientY;
-}
-
-function drag(e) {
-  if (!dragging || started) return;
-  const p = e.touches ? e.touches[0] : e;
-  if (startY - p.clientY > 70) ignite(); // upward drag to ignite
-}
-
-function ignite() {
   started = true;
-  fire.classList.add("active");
-  instruction.innerText = "✨ magic begins ✨";
-  revealText();
+  instruction.style.opacity = 0;
+  sparkInterval = setInterval(createSpark, 120);
+
+  // Sync text when sparks reach top
+  setTimeout(revealText, 2600);
 }
 
 function revealText() {
@@ -179,16 +156,8 @@ function revealText() {
   });
 }
 
-function endDrag() {
-  dragging = false;
-}
-
-match.addEventListener("mousedown", startDrag);
-match.addEventListener("touchstart", startDrag, { passive: false });
-document.addEventListener("mousemove", drag);
-document.addEventListener("touchmove", drag, { passive: false });
-document.addEventListener("mouseup", endDrag);
-document.addEventListener("touchend", endDrag);
+/* AUTO START */
+startSparks();
 </script>
 
 </body>

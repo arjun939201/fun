@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Magic Match</title>
+<meta charset="UTF-8">
+<title>Magic Match Reveal</title>
 
 <style>
   body {
@@ -22,13 +22,13 @@
     font-size: 3.5em;
     font-family: "Segoe UI", sans-serif;
     color: gold;
-    opacity: 0;
-    transition: opacity 0.3s linear;
-    filter: blur(10px);
+    opacity: 0.15; /* visible BEFORE touching */
+    filter: blur(8px);
     text-shadow:
-      0 0 10px gold,
-      0 0 30px orange,
-      0 0 60px red;
+      0 0 8px gold,
+      0 0 15px orange,
+      0 0 30px red;
+    pointer-events: none;
   }
 
   .match {
@@ -36,7 +36,7 @@
     width: 22px;
     height: 90px;
     left: 50%;
-    top: 60%;
+    top: 65%;
     transform: translate(-50%, -50%);
     background: linear-gradient(to bottom, #ffb347, #3b2b1f);
     border-radius: 4px;
@@ -60,9 +60,9 @@
     position: absolute;
     top: -50px;
     left: 50%;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, rgba(255,180,80,0.4), transparent 70%);
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(255,180,80,0.45), transparent 70%);
     transform: translateX(-50%);
     pointer-events: none;
   }
@@ -99,17 +99,17 @@ let dragging = false;
 function startDrag(e) {
   dragging = true;
   const rect = match.getBoundingClientRect();
-  const touch = e.touches ? e.touches[0] : e;
-  offsetX = touch.clientX - rect.left;
-  offsetY = touch.clientY - rect.top;
+  const p = e.touches ? e.touches[0] : e;
+  offsetX = p.clientX - rect.left;
+  offsetY = p.clientY - rect.top;
 }
 
 function drag(e) {
   if (!dragging) return;
-  const touch = e.touches ? e.touches[0] : e;
+  const p = e.touches ? e.touches[0] : e;
 
-  match.style.left = touch.clientX - offsetX + "px";
-  match.style.top = touch.clientY - offsetY + "px";
+  match.style.left = p.clientX - offsetX + "px";
+  match.style.top = p.clientY - offsetY + "px";
 
   glowEffect();
 }
@@ -130,24 +130,32 @@ function glowEffect() {
     (matchRect.top + matchRect.height / 2);
 
   const distance = Math.hypot(dx, dy);
-  const maxDistance = 250;
 
-  const intensity = Math.max(0, 1 - distance / maxDistance);
+  const revealDistance = 450; // appears early
+  const glowDistance = 200;   // full glow close
 
-  text.style.opacity = intensity;
-  text.style.filter = `blur(${10 - intensity * 10}px)`;
+  let visibility = 1 - distance / revealDistance;
+  visibility = Math.min(Math.max(visibility, 0.15), 1);
+
+  let glowPower = 1 - distance / glowDistance;
+  glowPower = Math.min(Math.max(glowPower, 0), 1);
+
+  text.style.opacity = visibility;
+  text.style.filter = `blur(${8 - glowPower * 8}px)`;
+
   text.style.textShadow = `
-    0 0 ${10 + intensity * 40}px gold,
-    0 0 ${20 + intensity * 60}px orange,
-    0 0 ${40 + intensity * 100}px red
+    0 0 ${8 + glowPower * 30}px gold,
+    0 0 ${15 + glowPower * 60}px orange,
+    0 0 ${30 + glowPower * 90}px red
   `;
 }
 
+// Mouse + Touch events
 match.addEventListener("mousedown", startDrag);
-match.addEventListener("touchstart", startDrag);
+match.addEventListener("touchstart", startDrag, { passive: false });
 
 document.addEventListener("mousemove", drag);
-document.addEventListener("touchmove", drag);
+document.addEventListener("touchmove", drag, { passive: false });
 
 document.addEventListener("mouseup", endDrag);
 document.addEventListener("touchend", endDrag);

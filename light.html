@@ -45,58 +45,48 @@
     margin: 18px 0;
     font-weight: 700;
     text-shadow:
-      0 0 22px rgba(255,215,120,1),
-      0 0 60px rgba(255,160,60,1),
-      0 0 120px rgba(255,120,30,1);
+      0 0 18px rgba(255,215,120,1),
+      0 0 45px rgba(255,160,60,0.9),
+      0 0 90px rgba(255,120,30,0.8);
     transition: opacity 2s ease, transform 2s ease;
   }
 
   .line.first { font-size: 4.2em; }
   .line.other { font-size: 2.6em; }
 
-  /* FLAME BASE (BOTTOM 5%) */
-  .flame-base {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 5%;
-    background: radial-gradient(circle at center bottom,
-      rgba(255,180,80,0.9),
-      rgba(255,120,30,0.6),
-      transparent 70%);
-    filter: blur(8px);
-    animation: flamePulse 1.5s infinite alternate;
-  }
-
-  @keyframes flamePulse {
-    from { opacity: 0.6; }
-    to { opacity: 1; }
-  }
-
   /* SPARKS */
   .spark {
     position: absolute;
-    bottom: 5%;
-    width: 6px;
-    height: 6px;
+    bottom: 0;
+    width: 5px;
+    height: 5px;
     background: radial-gradient(circle, #fff6a5, #ffb347, red);
     border-radius: 50%;
+    animation-name: sparkUp, sparkGlow;
+    animation-timing-function: linear, ease-in-out;
+    animation-fill-mode: forwards;
     box-shadow:
-      0 0 12px #ffcc66,
-      0 0 24px orange,
-      0 0 48px red;
-    animation: sparkUp linear forwards;
+      0 0 6px #ffcc66,
+      0 0 14px orange;
   }
 
   @keyframes sparkUp {
     from {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-    }
-    to {
-      transform: translateY(-85vh) scale(0.6);
+      transform: translateY(0);
       opacity: 0;
     }
+    10% { opacity: 1; }
+    to {
+      transform: translateY(-85vh);
+      opacity: 0;
+    }
+  }
+
+  @keyframes sparkGlow {
+    0% { filter: brightness(0.6); }
+    30% { filter: brightness(1.4); }
+    60% { filter: brightness(0.8); }
+    100% { filter: brightness(1.2); }
   }
 </style>
 </head>
@@ -115,23 +105,25 @@
   <div class="line other">bhoolna mat, hum ant tak saath rahenge 🫣</div>
 </div>
 
-<div class="flame-base"></div>
-
 <script>
 const lines = document.querySelectorAll(".line");
 const instruction = document.getElementById("instruction");
 
 let started = false;
-let sparkInterval;
 
 /* CREATE SPARK */
 function createSpark() {
   const spark = document.createElement("div");
   spark.className = "spark";
-  spark.style.left = Math.random() * 100 + "vw";
-  spark.style.animationDuration = (2 + Math.random() * 1.5) + "s";
-  document.body.appendChild(spark);
 
+  const duration = 5 + Math.random() * 3; // slower & natural
+  const glowDuration = 1 + Math.random() * 1.5;
+
+  spark.style.left = Math.random() * 100 + "vw";
+  spark.style.animationDuration = `${duration}s, ${glowDuration}s`;
+  spark.style.animationIterationCount = `1, infinite`;
+
+  document.body.appendChild(spark);
   spark.addEventListener("animationend", () => spark.remove());
 }
 
@@ -140,10 +132,11 @@ function startSparks() {
   if (started) return;
   started = true;
   instruction.style.opacity = 0;
-  sparkInterval = setInterval(createSpark, 120);
 
-  // Sync text when sparks reach top
-  setTimeout(revealText, 2600);
+  setInterval(createSpark, 220);
+
+  // Sync poem start with spark height
+  setTimeout(revealText, 3000);
 }
 
 function revealText() {

@@ -1,33 +1,47 @@
+Here is the FULL UPDATED WORKING CODE
+✔ elements moved slightly upward
+✔ looks visually centered
+✔ beautiful fonts added (Dancing Script + Poppins)
+✔ no logic broken
+
+Just copy–paste and run ❤️
+
+
+---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Magic Match Wish</title>
 
+<!-- Beautiful Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
   body {
     margin: 0;
     background: radial-gradient(circle, #111, #000);
-    height: 20vh;
+    height: 100vh;
     overflow: hidden;
     user-select: none;
-    font-family: "poppins", sans-serif;
+    font-family: "Poppins", sans-serif;
   }
 
   .instruction {
     position: absolute;
-    top: 12px;
+    top: 8px;
     width: 100%;
     text-align: center;
     color: #ffcc66;
-    font-size: 2em;
+    font-size: 1.8em;
     opacity: 0.9;
     letter-spacing: 1px;
   }
 
   .drop-zone {
     position: absolute;
-    top: 26%;
+    top: 20%;
     left: 50%;
     transform: translateX(-50%);
     width: 180px;
@@ -40,7 +54,7 @@
 
   .text-box {
     position: absolute;
-    top: 36%;
+    top: 30%;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -48,10 +62,12 @@
   }
 
   .line {
+    font-family: "Dancing Script", cursive;
     color: gold;
     opacity: 0;
     filter: blur(14px);
     margin: 20px 0;
+    letter-spacing: 1px;
     text-shadow:
       0 0 12px gold,
       0 0 40px orange,
@@ -60,11 +76,13 @@
   }
 
   .line.first {
-    font-size: 4.2em;   /* bigger */
+    font-size: 4.5em;
+    font-weight: 700;
   }
 
   .line.other {
-    font-size: 2.8em;   /* bigger */
+    font-size: 2.7em;
+    font-weight: 600;
   }
 
   .match {
@@ -72,12 +90,13 @@
     width: 22px;
     height: 90px;
     left: 50%;
-    top: 90px;
+    top: 60px;
     transform: translateX(-50%);
     background: linear-gradient(to bottom, #ffb347, #3b2b1f);
     border-radius: 4px;
     box-shadow: 0 0 22px rgba(255, 100, 0, 0.9);
     touch-action: none;
+    cursor: grab;
   }
 
   .fire {
@@ -102,15 +121,16 @@
 <body>
 
 <div class="instruction">matchstick neeche le jao</div>
+
 <div class="drop-zone"></div>
 
 <div class="text-box">
   <div class="line first">oye.. my pgli ✨</div>
   <div class="line other">pgli tum sach mein bahut sweet ho 🥰</div>
   <div class="line other">main khud ko lucky maanta hoon tum jaisi dost ke liye 😌</div>
-  <div class="line other">aur haan… tum sabse best ho.. diomond ho 💛</div>
-    <div class="line other">You're always mera lovely dost 😍😽</div>
-<div class="line other">hamesha khush rehna aur khayal rakhna 🥹</div>
+  <div class="line other">aur haan… tum sabse best ho.. diamond ho 💛</div>
+  <div class="line other">You're always mera lovely dost 😍😽</div>
+  <div class="line other">hamesha khush rehna aur khayal rakhna 🥹</div>
 </div>
 
 <div class="match" id="match">
@@ -162,7 +182,7 @@ function checkDrop() {
 function lockMatch() {
   locked = true;
   match.style.left = "50%";
-  match.style.top = "30%";
+  match.style.top = "26%";
   match.style.transform = "translateX(-50%)";
 
   revealText();
@@ -174,7 +194,7 @@ function revealText() {
     setTimeout(() => {
       line.style.opacity = 1;
       line.style.filter = "blur(0)";
-    }, delay += 2600);  // slower
+    }, delay += 2600);
   });
 }
 
@@ -192,3 +212,10 @@ document.addEventListener("touchend", endDrag);
 
 </body>
 </html>
+
+
+---
+
+If you want next: ✨ heart particles 🔥 fire sparks 🎶 soft background music 📱 perfect mobile scaling
+
+Just say the word 💛

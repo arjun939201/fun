@@ -1,1 +1,101 @@
+<style>
+  body {
+    margin: 0;
+    background-color: black;
+    overflow: hidden;
+  }
 
+  .text {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3em;
+    font-family: "Arial", sans-serif;
+    color: yellow;
+    text-shadow: 0 0 10px yellow;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .match {
+    position: absolute;
+    width: 20px;
+    height: 80px;
+    background: linear-gradient(to bottom, orange, black);
+    border-radius: 3px;
+    cursor: move;
+    box-shadow: 0 0 30px red;
+  }
+
+  .fire {
+    position: absolute;
+    bottom: 60%;
+    left: 50%;
+    width: 20px;
+    height: 40px;
+    background: radial-gradient(circle, yellow, orange, red);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: flicker 0.2s infinite ease-in-out;
+  }
+
+  @keyframes flicker {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 1;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.8;
+    }
+  }
+</style>
+
+<div class="text" id="wishText">Wish my pgli</div>
+<div class="match" id="matchstick">
+  <div class="fire"></div>
+</div>
+
+<script>
+  const text = document.getElementById("wishText");
+  const matchstick = document.getElementById("matchstick");
+
+  matchstick.onmousedown = (event) => {
+    let shiftX = event.clientX - matchstick.getBoundingClientRect().left;
+    let shiftY = event.clientY - matchstick.getBoundingClientRect().top;
+
+    function moveAt(pageX, pageY) {
+      matchstick.style.left = pageX - shiftX + "px";
+      matchstick.style.top = pageY - shiftY + "px";
+
+      // Check proximity to the text
+      const textRect = text.getBoundingClientRect();
+      const matchRect = matchstick.getBoundingClientRect();
+      const distance = Math.hypot(
+        textRect.left + textRect.width / 2 - (matchRect.left + matchRect.width / 2),
+        textRect.top + textRect.height / 2 - (matchRect.top + matchRect.height / 2)
+      );
+
+      if (distance < 150) {
+        text.style.opacity = 1;
+      } else {
+        text.style.opacity = 0;
+      }
+    }
+
+    function onMouseMove(event) {
+      moveAt(event.pageX, event.pageY);
+    }
+
+    document.addEventListener("mousemove", onMouseMove);
+
+    matchstick.onmouseup = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      matchstick.onmouseup = null;
+    };
+  };
+
+  matchstick.ondragstart = () => false;
+
+      </script>

@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Match Glow Precision</title>
+<title>Precise Match Glow</title>
 
 <style>
   body {
     margin: 0;
-    background: radial-gradient(circle at center, #111, #000);
-    overflow: hidden;
+    background: radial-gradient(circle, #111, #000);
     height: 100vh;
+    overflow: hidden;
     user-select: none;
   }
 
@@ -28,7 +28,6 @@
       0 0 10px gold,
       0 0 30px orange,
       0 0 60px red;
-    transition: opacity 0.1s linear;
   }
 
   .match {
@@ -40,7 +39,7 @@
     transform: translate(-50%, -50%);
     background: linear-gradient(to bottom, #ffb347, #3b2b1f);
     border-radius: 4px;
-    box-shadow: 0 0 15px rgba(255, 80, 0, 0.8);
+    box-shadow: 0 0 18px rgba(255, 100, 0, 0.9);
     touch-action: none;
   }
 
@@ -78,6 +77,8 @@ const text = document.getElementById("wishText");
 let offsetX = 0, offsetY = 0;
 let dragging = false;
 
+const GLOW_PADDING = 40; // matches blur radius visually
+
 function startDrag(e) {
   dragging = true;
   const r = match.getBoundingClientRect();
@@ -90,8 +91,32 @@ function drag(e) {
   if (!dragging) return;
   const p = e.touches ? e.touches[0] : e;
 
-  match.style.left = p.clientX - offsetX + "px";
-  match.style.top = p.clientY - offsetY + "px";
+  let x = p.clientX - offsetX;
+  let y = p.clientY - offsetY;
+
+  const t = text.getBoundingClientRect();
+  const m = match.getBoundingClientRect();
+
+  // Expanded text boundary (blur edge)
+  const expanded = {
+    left: t.left - GLOW_PADDING,
+    right: t.right + GLOW_PADDING,
+    top: t.top - GLOW_PADDING,
+    bottom: t.bottom + GLOW_PADDING
+  };
+
+  // Prevent entering text area
+  if (
+    x + m.width > expanded.left &&
+    x < expanded.right &&
+    y + m.height > expanded.top &&
+    y < expanded.bottom
+  ) {
+    return; // BLOCK movement
+  }
+
+  match.style.left = x + "px";
+  match.style.top = y + "px";
 
   glowLogic();
 }
@@ -104,18 +129,24 @@ function glowLogic() {
   const t = text.getBoundingClientRect();
   const m = match.getBoundingClientRect();
 
-  // Distance to closest edge of text box
-  const dx = Math.max(t.left - m.right, m.left - t.right, 0);
-  const dy = Math.max(t.top - m.bottom, m.top - t.bottom, 0);
-  const distance = Math.hypot(dx, dy);
+  const dx = Math.max(
+    (t.left - GLOW_PADDING) - m.right,
+    m.left - (t.right + GLOW_PADDING),
+    0
+  );
+  const dy = Math.max(
+    (t.top - GLOW_PADDING) - m.bottom,
+    m.top - (t.bottom + GLOW_PADDING),
+    0
+  );
 
-  const startGlow = 80; // start glowing BEFORE touching
+  const distance = Math.hypot(dx, dy);
+  const startGlow = 120;
+
   let glow = 1 - distance / startGlow;
   glow = Math.min(Math.max(glow, 0), 1);
 
-  // Opacity appears only when glow starts
-  text.style.opacity = glow > 0 ? glow : 0;
-
+  text.style.opacity = glow;
   text.style.filter = `blur(${10 - glow * 10}px)`;
   text.style.textShadow = `
     0 0 ${10 + glow * 30}px gold,

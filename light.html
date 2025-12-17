@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Precise Match Glow</title>
+<title>Magic Match Wish</title>
 
 <style>
   body {
@@ -11,23 +11,41 @@
     height: 100vh;
     overflow: hidden;
     user-select: none;
+    font-family: "Segoe UI", sans-serif;
   }
 
-  .text {
+  /* Instruction */
+  .instruction {
     position: absolute;
-    top: 30%;
+    top: 15px;
+    width: 100%;
+    text-align: center;
+    color: #ffcc66;
+    font-size: 1.2em;
+    opacity: 0.8;
+    letter-spacing: 1px;
+  }
+
+  /* Text container */
+  .text-box {
+    position: absolute;
+    top: 35%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 3.5em;
-    font-family: "Segoe UI", sans-serif;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .line {
+    font-size: 2.2em;
     color: gold;
     opacity: 0;
     filter: blur(10px);
-    pointer-events: none;
+    margin: 12px 0;
     text-shadow:
       0 0 10px gold,
       0 0 30px orange,
       0 0 60px red;
+    transition: opacity 0.4s linear;
   }
 
   .match {
@@ -35,8 +53,8 @@
     width: 22px;
     height: 90px;
     left: 50%;
-    top: 65%;
-    transform: translate(-50%, -50%);
+    top: 80px;
+    transform: translateX(-50%);
     background: linear-gradient(to bottom, #ffb347, #3b2b1f);
     border-radius: 4px;
     box-shadow: 0 0 18px rgba(255, 100, 0, 0.9);
@@ -64,7 +82,14 @@
 
 <body>
 
-<div class="text" id="wishText">Wish My Pgli ✨</div>
+<div class="instruction">matchstick neeche le jao</div>
+
+<div class="text-box" id="textBox">
+  <div class="line" id="line1">Wish my pgli</div>
+  <div class="line" id="line2">pgli tum bahut sweet ho</div>
+  <div class="line" id="line3">main khushnaseeb hoon tum jaisi dost ke liye</div>
+  <div class="line" id="line4">tum sabse best ho</div>
+</div>
 
 <div class="match" id="match">
   <div class="fire"></div>
@@ -72,12 +97,16 @@
 
 <script>
 const match = document.getElementById("match");
-const text = document.getElementById("wishText");
+const lines = document.querySelectorAll(".line");
+const firstLine = document.getElementById("line1");
+const textBox = document.getElementById("textBox");
 
 let offsetX = 0, offsetY = 0;
 let dragging = false;
+let sequenceStarted = false;
 
-const GLOW_PADDING = 40; // matches blur radius visually
+const GLOW_PADDING = 40;
+const START_GLOW_DISTANCE = 120;
 
 function startDrag(e) {
   dragging = true;
@@ -94,10 +123,9 @@ function drag(e) {
   let x = p.clientX - offsetX;
   let y = p.clientY - offsetY;
 
-  const t = text.getBoundingClientRect();
+  const t = textBox.getBoundingClientRect();
   const m = match.getBoundingClientRect();
 
-  // Expanded text boundary (blur edge)
   const expanded = {
     left: t.left - GLOW_PADDING,
     right: t.right + GLOW_PADDING,
@@ -105,28 +133,22 @@ function drag(e) {
     bottom: t.bottom + GLOW_PADDING
   };
 
-  // Prevent entering text area
+  // Block entry into text area
   if (
     x + m.width > expanded.left &&
     x < expanded.right &&
     y + m.height > expanded.top &&
     y < expanded.bottom
-  ) {
-    return; // BLOCK movement
-  }
+  ) return;
 
   match.style.left = x + "px";
   match.style.top = y + "px";
 
-  glowLogic();
+  glowFirstLine();
 }
 
-function endDrag() {
-  dragging = false;
-}
-
-function glowLogic() {
-  const t = text.getBoundingClientRect();
+function glowFirstLine() {
+  const t = firstLine.getBoundingClientRect();
   const m = match.getBoundingClientRect();
 
   const dx = Math.max(
@@ -141,18 +163,30 @@ function glowLogic() {
   );
 
   const distance = Math.hypot(dx, dy);
-  const startGlow = 120;
-
-  let glow = 1 - distance / startGlow;
+  let glow = 1 - distance / START_GLOW_DISTANCE;
   glow = Math.min(Math.max(glow, 0), 1);
 
-  text.style.opacity = glow;
-  text.style.filter = `blur(${10 - glow * 10}px)`;
-  text.style.textShadow = `
-    0 0 ${10 + glow * 30}px gold,
-    0 0 ${20 + glow * 60}px orange,
-    0 0 ${40 + glow * 90}px red
-  `;
+  firstLine.style.opacity = glow;
+  firstLine.style.filter = `blur(${10 - glow * 10}px)`;
+
+  if (glow === 1 && !sequenceStarted) {
+    sequenceStarted = true;
+    revealOthers();
+  }
+}
+
+function revealOthers() {
+  let delay = 0;
+  for (let i = 1; i < lines.length; i++) {
+    setTimeout(() => {
+      lines[i].style.opacity = 1;
+      lines[i].style.filter = "blur(0)";
+    }, delay += 700);
+  }
+}
+
+function endDrag() {
+  dragging = false;
 }
 
 // Events

@@ -36,40 +36,38 @@
 
   .intro-title {
     color: #ffffff;
-    font-size: 4em;
+    font-size: 5em;
     font-weight: 700;
-    text-shadow: 0 0 10px rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(255,255,255,0.4);
   }
 
   .intro-btn {
-    padding: 14px 40px;
-    font-size: 1.8em;
+    padding: 16px 46px;
+    font-size: 1.9em;
     font-weight: 700;
-    border-radius: 40px;
+    border-radius: 50px;
     border: none;
     background: #111;
     color: #bbb;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(0,0,0,0.8);
-    transition: 
-      color 1.2s ease,
-      box-shadow 2.2s ease,
-      background 1.2s ease;
+    transition: all 1.8s ease;
   }
 
+  /* BUTTON INNER GLOW */
   .intro-btn.glow {
-    color: #ffd87a;
-    background: #222;
+    color: #2b1b00;
+    background: radial-gradient(circle at top, #ffe29a, #ffb84d, #ff9a2f);
     box-shadow:
-      0 0 30px rgba(255,215,120,0.9),
-      0 0 80px rgba(255,180,80,1),
-      0 0 160px rgba(255,120,30,1);
+      inset 0 0 25px rgba(255,255,255,0.6),
+      inset 0 0 50px rgba(255,200,80,0.8),
+      0 0 25px rgba(255,170,60,0.6);
   }
 
   /* SLIDES */
   .slide-container {
     position: absolute;
-    top: 16%;
+    top: 14%;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
@@ -89,6 +87,10 @@
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 2s ease, transform 2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
   }
 
   .slide.active {
@@ -99,31 +101,37 @@
   .text {
     color: #ffd87a;
     font-weight: 700;
-    margin-bottom: 18px;
     text-shadow:
       0 0 18px rgba(255,215,120,1),
       0 0 45px rgba(255,160,60,0.9),
       0 0 90px rgba(255,120,30,0.8);
   }
 
-  .text.first { font-size: 4.2em; }
-  .text.other { font-size: 2.6em; }
+  .text.first {
+    font-size: 5.2em;
+    line-height: 1.15;
+  }
+
+  .text.other {
+    font-size: 3.3em;
+    line-height: 1.25;
+  }
 
   .image {
-    width: 260px;
-    max-width: 80%;
-    border-radius: 18px;
+    width: 420px;
+    max-width: 90%;
+    border-radius: 20px;
     box-shadow:
-      0 0 20px rgba(255,180,80,0.8),
-      0 0 60px rgba(255,120,30,0.6);
+      0 0 22px rgba(255,180,80,0.8),
+      0 0 70px rgba(255,120,30,0.6);
   }
 
   /* SPARKS */
   .spark {
     position: absolute;
     bottom: 0;
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
     background: radial-gradient(circle, #fff6a5, #ffb347, red);
     border-radius: 50%;
     animation-name: sparkUp, sparkGlow;
@@ -166,17 +174,17 @@
   </div>
 
   <div class="slide">
-    <div class="text other">tum jaisi dost ke liye,<br>main khud ko lucky maanta hoon 🥰</div>
+    <div class="text other">tum jaisi dost ke liye,<br>main khud ko lucky maanta hoon 💛</div>
     <img src="image2.jpg" class="image">
   </div>
 
   <div class="slide">
-    <div class="text other">sach mein bahut sweet aur pyaari ho 🤗</div>
+    <div class="text other">sach mein bahut sweet aur pyaari ho 😍</div>
     <img src="image3.jpg" class="image">
   </div>
 
   <div class="slide">
-    <div class="text other">aur haan… tum sabse best ho,<br>ekdum diamond ho 💛</div>
+    <div class="text other">aur haan… tum sabse best ho,<br>ekdum diamond ho 🤗</div>
     <img src="image4.jpg" class="image">
   </div>
 
@@ -197,14 +205,21 @@
 
 </div>
 
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
+
 <script>
 const intro = document.getElementById("intro");
 const startBtn = document.getElementById("startBtn");
 const slideBox = document.getElementById("slides");
 const slides = document.querySelectorAll(".slide");
+const bgMusic = document.getElementById("bgMusic");
 
 let current = 0;
 let started = false;
+
+/* MUSIC SETTINGS */
+bgMusic.volume = 0.7;
 
 /* SPARKS */
 function createSpark() {
@@ -216,15 +231,17 @@ function createSpark() {
   document.body.appendChild(spark);
   spark.addEventListener("animationend", () => spark.remove());
 }
-
 setInterval(createSpark, 220);
 
-/* START SEQUENCE */
+/* START */
 startBtn.addEventListener("click", () => {
   if (started) return;
   started = true;
 
   startBtn.classList.add("glow");
+
+  /* play music */
+  bgMusic.play().catch(() => {});
 
   setTimeout(() => {
     intro.classList.add("hide");
@@ -245,9 +262,3 @@ function startSlides() {
 
 </body>
 </html>
-
-If you want next: ✨ last slide stays forever
-💖 final spark burst
-📱 mobile-perfect spacing
-
-Just tell me 👍

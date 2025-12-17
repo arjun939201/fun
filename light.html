@@ -1,101 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Magic Match</title>
+
 <style>
   body {
     margin: 0;
-    background-color: black;
+    background: radial-gradient(circle at center, #111, #000);
     overflow: hidden;
+    height: 100vh;
+    user-select: none;
+    cursor: grab;
   }
 
   .text {
     position: absolute;
-    top: 20%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 3em;
-    font-family: "Arial", sans-serif;
-    color: yellow;
-    text-shadow: 0 0 10px yellow;
+    font-size: 3.5em;
+    font-family: "Segoe UI", sans-serif;
+    color: gold;
     opacity: 0;
-    transition: opacity 0.5s;
+    transition: opacity 0.3s linear;
+    filter: blur(10px);
+    text-shadow:
+      0 0 10px gold,
+      0 0 30px orange,
+      0 0 60px red;
   }
 
   .match {
     position: absolute;
-    width: 20px;
-    height: 80px;
-    background: linear-gradient(to bottom, orange, black);
-    border-radius: 3px;
-    cursor: move;
-    box-shadow: 0 0 30px red;
+    width: 22px;
+    height: 90px;
+    left: 50%;
+    top: 60%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to bottom, #ffb347, #3b2b1f);
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(255, 80, 0, 0.8);
+    touch-action: none;
   }
 
   .fire {
     position: absolute;
-    bottom: 60%;
+    top: -35px;
     left: 50%;
-    width: 20px;
-    height: 40px;
-    background: radial-gradient(circle, yellow, orange, red);
+    width: 26px;
+    height: 45px;
+    background: radial-gradient(circle, #fff176, orange, red);
     border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: flicker 0.2s infinite ease-in-out;
+    transform: translateX(-50%);
+    animation: flicker 0.15s infinite alternate;
+  }
+
+  .light {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,180,80,0.4), transparent 70%);
+    transform: translateX(-50%);
+    pointer-events: none;
   }
 
   @keyframes flicker {
-    0%, 100% {
-      transform: translate(-50%, -50%) scale(1.2);
+    from {
+      transform: translateX(-50%) scale(1);
       opacity: 1;
     }
-    50% {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 0.8;
+    to {
+      transform: translateX(-50%) scale(1.15);
+      opacity: 0.85;
     }
   }
 </style>
+</head>
 
-<div class="text" id="wishText">Wish my pgli</div>
-<div class="match" id="matchstick">
+<body>
+
+<div class="text" id="wishText">Wish My Pgli ✨</div>
+
+<div class="match" id="match">
   <div class="fire"></div>
+  <div class="light"></div>
 </div>
 
 <script>
-  const text = document.getElementById("wishText");
-  const matchstick = document.getElementById("matchstick");
+const match = document.getElementById("match");
+const text = document.getElementById("wishText");
 
-  matchstick.onmousedown = (event) => {
-    let shiftX = event.clientX - matchstick.getBoundingClientRect().left;
-    let shiftY = event.clientY - matchstick.getBoundingClientRect().top;
+let offsetX = 0, offsetY = 0;
+let dragging = false;
 
-    function moveAt(pageX, pageY) {
-      matchstick.style.left = pageX - shiftX + "px";
-      matchstick.style.top = pageY - shiftY + "px";
+function startDrag(e) {
+  dragging = true;
+  const rect = match.getBoundingClientRect();
+  const touch = e.touches ? e.touches[0] : e;
+  offsetX = touch.clientX - rect.left;
+  offsetY = touch.clientY - rect.top;
+}
 
-      // Check proximity to the text
-      const textRect = text.getBoundingClientRect();
-      const matchRect = matchstick.getBoundingClientRect();
-      const distance = Math.hypot(
-        textRect.left + textRect.width / 2 - (matchRect.left + matchRect.width / 2),
-        textRect.top + textRect.height / 2 - (matchRect.top + matchRect.height / 2)
-      );
+function drag(e) {
+  if (!dragging) return;
+  const touch = e.touches ? e.touches[0] : e;
 
-      if (distance < 150) {
-        text.style.opacity = 1;
-      } else {
-        text.style.opacity = 0;
-      }
-    }
+  match.style.left = touch.clientX - offsetX + "px";
+  match.style.top = touch.clientY - offsetY + "px";
 
-    function onMouseMove(event) {
-      moveAt(event.pageX, event.pageY);
-    }
+  glowEffect();
+}
 
-    document.addEventListener("mousemove", onMouseMove);
+function endDrag() {
+  dragging = false;
+}
 
-    matchstick.onmouseup = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      matchstick.onmouseup = null;
-    };
-  };
+function glowEffect() {
+  const textRect = text.getBoundingClientRect();
+  const matchRect = match.getBoundingClientRect();
 
-  matchstick.ondragstart = () => false;
+  const dx =
+    (textRect.left + textRect.width / 2) -
+    (matchRect.left + matchRect.width / 2);
+  const dy =
+    (textRect.top + textRect.height / 2) -
+    (matchRect.top + matchRect.height / 2);
 
-      </script>
+  const distance = Math.hypot(dx, dy);
+  const maxDistance = 250;
+
+  const intensity = Math.max(0, 1 - distance / maxDistance);
+
+  text.style.opacity = intensity;
+  text.style.filter = `blur(${10 - intensity * 10}px)`;
+  text.style.textShadow = `
+    0 0 ${10 + intensity * 40}px gold,
+    0 0 ${20 + intensity * 60}px orange,
+    0 0 ${40 + intensity * 100}px red
+  `;
+}
+
+match.addEventListener("mousedown", startDrag);
+match.addEventListener("touchstart", startDrag);
+
+document.addEventListener("mousemove", drag);
+document.addEventListener("touchmove", drag);
+
+document.addEventListener("mouseup", endDrag);
+document.addEventListener("touchend", endDrag);
+</script>
+
+</body>
+</html>

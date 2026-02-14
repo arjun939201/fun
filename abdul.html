@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Bunty 💖</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .page{
+            position:absolute;
+            width:100%;
+            height:100vh;
+            top:0;
+            left:0;
+            display:none;
+            justify-content:center;
+            align-items:center;
+            flex-direction:column;
+            text-align:center;
+            padding:20px;
+            overflow-y: auto;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .active{ display:flex; }
+
+        /* LOGIN PAGE */
+        #login{
+            background:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70") center/cover no-repeat;
+        }
+
+        .login-box{
+            background:rgba(0,0,0,0.8);
+            padding:40px;
+            border-radius:20px;
+            color:white;
+            width:90%;
+            max-width:350px;
+            box-shadow:0 0 25px #ff4081;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border:none;
+            border-radius:25px;
+            outline: none;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        button{
+            padding:12px 25px;
+            margin:8px;
+            border:none;
+            border-radius:25px;
+            background:linear-gradient(45deg,#ff4081,#ff80ab);
+            color:white;
+            cursor:pointer;
+            transition:0.3s;
+            box-shadow:0 0 15px rgba(255,64,129,0.6);
+            font-weight: bold;
+        }
+
+        button:hover{ transform:scale(1.1); }
+
+        .back{
+            margin-top:25px;
+            font-weight:bold;
+            cursor:pointer;
+            background:white;
+            color: #ff4081;
+            padding:10px 22px;
+            border-radius:20px;
+            position:relative;
+            z-index:999; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: inline-block;
+        }
+
+        /* LOADING */
+        #loading{ background:black; color:white; }
+        #bmw{ width:100px; animation:spin 2s linear infinite; }
+        @keyframes spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+        #barWrap{ width:250px; height:10px; background:#333; margin-top:20px; border-radius: 5px; overflow: hidden; }
+        #bar{ width:0%; height:100%; background:#ff4081; transition: width 0.1s; }
+
+        /* MODULES & BACKGROUNDS */
+        #welcome, #home, #secretMessage, #letterSubModules, #justYouNote, #tell1, #tell2, #tell3, #tell4, #tellFinal {
+            background-image: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url("https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070&auto=format&fit=crop");
+        }
+
+        .module{
+            background:white;
+            padding:15px;
+            width:280px;
+            margin:10px;
+            border-radius:20px;
+            cursor:pointer;
+            box-shadow:0 0 15px rgba(0,0,0,0.1);
+            transition:0.3s;
+            font-weight: 600;
+            color: #d81b60;
+        }
+        .module:hover{ transform:scale(1.05); background: #fff0f5; }
+
+        /* ABOUT SECTION */
+        #aboutYourself{
+            background:linear-gradient(to bottom,#0f2027,#203a43,#2c5364);
+            color:white;
+        }
+        .sky{ position:absolute; width:100%; height:100%; top:0; left:0; z-index:1; overflow: hidden; }
+        .moon{
+            position:absolute; top:30px; right:30px; width:80px; height:80px;
+            background:radial-gradient(circle at 30% 30%, #fff, #f5f3ce);
+            border-radius:50%; box-shadow:0 0 30px rgba(255,255,200,0.5);
+        }
+        #typeText{
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            padding: 20px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+        }
+
+        /* GIFT BOX */
+        #giftPage {
+            background-image: linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), url("https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=1974&auto=format&fit=crop");
+        }
+        #giftBox{ width:150px; cursor:pointer; transition: 0.3s; }
+        #giftBox:hover { transform: scale(1.1); }
+        #giftContent{ display:none; margin-top:20px; max-width:500px; background:white; padding:20px; border-radius:15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        #giftContent img{ width:100px; margin-bottom:15px; }
+
+        /* YOU MATTER TYPEWRITER */
+        #youMatterPage {
+            background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url("https://images.unsplash.com/photo-1522673607200-1648835ced48?q=80&w=2044&auto=format&fit=crop");
+        }
+        #matterTypewriter {
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            color: #333;
+            text-align: center;
+            line-height: 1.6;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        /* RUNNING BUTTON */
+        .moveArea{ position:relative; width:100%; height:150px; margin-top: 20px; }
+        #runNo{ position:absolute; transition: 0.1s; }
+
+        .letter-card {
+            background: white; padding: 30px; border-radius: 15px;
+            max-width: 90%; border-left: 8px solid #ff4081; color:#333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        @keyframes bounce { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-10px);} }
+ /* Container for the falling emojis */
+#emoji-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; 
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.falling-emoji {
+    position: absolute;
+    top: -60px; /* Start above the screen */
+    user-select: none;
+    /* Faster linear fall for a 'heavy' feel */
+    animation: fall-heavy linear forwards;
+}
+
+@keyframes fall-heavy {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        /* Falls past the bottom of the screen */
+        transform: translateY(115vh) rotate(20deg);
+        opacity: 0;
+    }
+}
+
+</style>
+</head>
+<body>
+
+    <div id="login" class="page active">
+        <div class="login-box">
+            <h2>Login 💖</h2>
+            <input id="user" placeholder="Username">
+            <input id="pass" type="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <div id="loading" class="page">
+        <img id="bmw" src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg">
+        <h2 style="margin-top:20px;">Preparing something for you...</h2>
+        <div id="barWrap"><div id="bar"></div></div>
+    </div>
+
+    <div id="welcome" class="page">
+        <h1>Hi Bunty 💖<br>I’m Abdul 🙂</h1>
+        <button onclick="show('home')">Continue</button>
+    </div>
+
+    <div id="home" class="page">
+        <h2>Bunty Web Page 💕</h2>
+        <div class="module" onclick="show('aboutYourself')">About Yourself 💖</div>
+        <div class="module" onclick="show('giftPage')">A Gift For You 🎁</div>
+        <div class="module" onclick="show('tell1')">I Want To Tell You 💌</div>
+        <div class="module" onclick="show('secretMessage')">Open This Letter ✉️</div>
+        <div class="back" onclick="location.reload()">⬅ Logout</div>
+    </div>
+
+    <div id="aboutYourself" class="page">
+        <div class="sky"><div class="moon"></div></div>
+        <h2 style="z-index: 2; margin-bottom: 10px;">About Yourself 💖</h2>
+        <p id="typeText"></p>
+        <div class="back" onclick="show('home')">⬅ Back to Home</div>
+    </div>
+
+    <div id="giftPage" class="page">
+        <h2>A Special Gift For You 🎁</h2>
+        <img id="giftBox" src="https://cdn-icons-png.flaticon.com/512/869/869636.png" onclick="openGift()">
+        <p id="giftHint">Please open the box 🤗</p>
+        <div id="giftContent">
+            <img src="https://cdn-icons-png.flaticon.com/512/1250/1250615.png">
+            <h3>Friendship Bond 🤝</h3>
+            <p>"Friendship is not about who you’ve known the longest, it’s about who walked into your life and proved it." 💞</p>
+        </div>
+        <div class="back" onclick="show('home')">⬅ Back</div>
+    </div>
+
+    <div id="secretMessage" class="page">
+        <div style="font-size: 80px; cursor: pointer; animation: bounce 2s infinite;" onclick="show('letterSubModules')">📩</div>
+        <h2>Open the letter...</h2>
+        <div class="back" onclick="show('home')">⬅ Back</div>
+    </div>
+
+    <div id="letterSubModules" class="page">
+        <div class="module" onclick="show('justYouNote')">Just You 💞</div>
+        <div class="module" onclick="startYouMatter()">You Matter 💎</div>
+        <div class="back" onclick="show('secretMessage')">⬅ Back</div>
+    </div>
+
+    <div id="youMatterPage" class="page">
+        <div id="flyingWordsContainer" style="position: absolute; width: 100%; height: 100%; overflow: hidden; pointer-events: none;"></div>
+        <div id="matterContainer" style="z-index: 10; padding: 20px; max-width: 100%;">
+            <h1 id="matterHeading" style="color: #ff1493; font-size: 22px; margin-bottom: 15px; display: none;">
+                Something from my heart ❤️
+            </h1>
+            <div id="matterTypewriter"></div>
+            <h2 id="matterFooter" style="font-size: 18px; color: #ff4081; margin-top: 20px; display: none;">
+                THANK YOU MUSHHU FROM YOUR MUKHLIS 🍄💌
+            </h2>
+            <div id="matterBackBtn" class="back" style="display: none;" onclick="show('letterSubModules')">⬅ Back</div>
+        </div>
+    </div>
+
+    <div id="justYouNote" class="page">
+        <div class="letter-card">
+            <p>"Out of all the people, my heart felt happiest with you. Please don't leave me, mushroom." ❤️</p>
+        </div>
+        <div class="back" onclick="show('letterSubModules')">⬅ Back</div>
+    </div>
+
+    <div id="tell1" class="page">
+        <div class="letter-card">
+            <h2>Please re-accept me as your friend 🥺</h2>
+            <button onclick="show('tellFinal')">YES</button>
+            <button onclick="show('tell2')">NO</button>
+        </div>
+    </div>
+
+    <div id="tell2" class="page">
+        <div class="letter-card">
+            <h2>Please yaar ek baar soch lo yaar 🥺💗</h2>
+            <button onclick="show('tellFinal')">YES</button>
+            <button onclick="show('tell3')">NO</button>
+        </div>
+    </div>
+
+    <div id="tell3" class="page">
+        <div class="letter-card">
+            <h2>Plicchh Bunty aur ek baar sochoov 🥹✨</h2>
+            <button onclick="show('tellFinal')">YES</button>
+            <button onclick="show('tell4')">NO</button>
+        </div>
+    </div>
+
+    <div id="tell4" class="page">
+        <div class="letter-card">
+            <h2>Please pls plicchhh merii mushu 🍄💞</h2>
+            <div class="moveArea">
+                <button onclick="show('tellFinal')">YES</button>
+                <button id="runNo" onmouseover="moveNo()" onclick="moveNo()">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tellFinal" class="page">
+        <h1>Thank you so much meri Bunty 💖</h1>
+        <p style="margin: 20px 0;">You will see my another level of loving and caring ❤️</p>
+        <div class="back" onclick="show('home')">Home</div>
+    </div>
+
+    <script>
+        let typingInterval;
+        let lineIntervals = [];
+
+        function show(id){
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(id);
+            if(target) target.classList.add('active');
+            
+            clearInterval(typingInterval);
+            lineIntervals.forEach(i => clearInterval(i));
+            lineIntervals = [];
+
+            if(id === "aboutYourself") { typeEffect(); }
+        }
+
+        function login(){
+            let u = document.getElementById("user").value.trim().toLowerCase();
+            let p = document.getElementById("pass").value.trim();
+            
+            if(u === "bunty" && p === "19052004"){
+                show('loading');
+                let w = 0;
+                let bar = document.getElementById("bar");
+                let i = setInterval(() => {
+                    w += 2;
+                    if(bar) bar.style.width = w + "%";
+                    if(w >= 100){ 
+                        clearInterval(i); 
+                        show('welcome'); 
+                    }
+                }, 30);
+            } else { 
+                alert("Incorrect login. Please try again."); 
+            }
+        }
+
+        function openGift(){
+            document.getElementById("giftBox").style.display = "none";
+            document.getElementById("giftHint").style.display = "none";
+            document.getElementById("giftContent").style.display = "block";
+        }
+
+        function moveNo(){
+            let btn = document.getElementById("runNo");
+            let maxX = 150;
+            let maxY = 100;
+            btn.style.left = Math.random() * maxX + "px";
+            btn.style.top = Math.random() * maxY + "px";
+        }
+
+        const aboutMsg = "How can someone's presence bring so much peace 🌸✨\nBeauty shine so naturally 🌷💫\nCharacter stay so pure 🤍🌼\nAnd nature remain so kind all at once? 🌿💖\n\nI'm so lucky to found a person like Bunty, Mushroom 🍄💞\nThank you for coming in my life Gouseee ❤️";
+
+        function typeEffect(){
+            let el = document.getElementById("typeText");
+            el.innerHTML = "";
+            let i = 0;
+            // SLOWED DOWN: Changed from 50 to 100ms
+            typingInterval = setInterval(() => {
+                let char = aboutMsg.charAt(i);
+                el.innerHTML += (char === "\n") ? "<br>" : char;
+                i++;
+                if(i >= aboutMsg.length) clearInterval(typingInterval);
+            }, 100);
+        }
+
+        const matterLines = [
+            "No matter how hard days get, my choice doesn't change... 🌷",
+            "It's still you mushroom. 🍄✨",
+            "Please don't leave me, I want your friendship... 🥺💞",
+            "I will change for you, I will listen to your words. 🤝🌸",
+            "Main promise karta hoon, main aisa phir nahi karunga... 😔💔",
+            "Tumhe pasand nahi aaya... 🥀",
+            "Every time main tumko admire karta hoon... 💖✨",
+            "Tumhe hurt kiya, please mujhe maaf kardo. 🙏🍄",
+            "Tum pehle jaisi thi, ab bhi waise hi ho... 🤞🌈",
+            "I really want your previous version... 💝",
+            "Anyways, I really want your friendship... 🫂❤️",
+            "I promise you I will change for you... 💍✨"
+        ];
+
+        function startYouMatter() {
+            show('youMatterPage');
+            const container = document.getElementById('flyingWordsContainer');
+            const typewriter = document.getElementById('matterTypewriter');
+            const heading = document.getElementById('matterHeading');
+            const footer = document.getElementById('matterFooter');
+            const backBtn = document.getElementById('matterBackBtn');
+
+            container.innerHTML = ''; 
+            typewriter.innerHTML = '';
+            heading.style.display = 'none';
+            footer.style.display = 'none';
+            backBtn.style.display = 'none';
+
+            const words = ['Mushroom 🍄', 'Bunty 💖', 'Gouseee ✨', 'Love 💞'];
+            
+            words.forEach((word, index) => {
+                const span = document.createElement('span');
+                span.innerText = word;
+                span.style.position = 'absolute';
+                span.style.left = '50%';
+                span.style.top = '50%';
+                span.style.transform = 'translate(-50%, -50%)';
+                span.style.fontSize = '24px';
+                span.style.fontWeight = 'bold';
+                span.style.color = '#ff4081';
+                span.style.transition = 'all 2.5s ease-in-out';
+                span.style.whiteSpace = 'nowrap';
+                container.appendChild(span);
+
+                setTimeout(() => {
+                    const angle = (index / words.length) * Math.PI * 2;
+                    const dist = 500; 
+                    const x = Math.cos(angle) * dist;
+                    const y = Math.sin(angle) * dist;
+                    span.style.transform = `translate(${x}px, ${y}px) scale(2) rotate(360deg)`;
+                    span.style.opacity = '0';
+                }, 100);
+            });
+
+            setTimeout(() => {
+                heading.style.display = 'block';
+                typeLines(0);
+            }, 2500); // Wait for animations to finish
+        }
+
+        function typeLines(lineIndex) {
+            if (lineIndex < matterLines.length) {
+                let div = document.createElement('p');
+                div.style.marginBottom = "10px";
+                document.getElementById('matterTypewriter').appendChild(div);
+                
+                let charIndex = 0;
+                let text = matterLines[lineIndex];
+                
+                // SLOWED DOWN: Changed from 40 to 90ms
+                let lineInt = setInterval(() => {
+                    div.innerHTML += text[charIndex];
+                    charIndex++;
+                    if (charIndex >= text.length) {
+                        clearInterval(lineInt);
+                        // PAUSE BETWEEN LINES: Changed from 700 to 1500ms
+                        setTimeout(() => typeLines(lineIndex + 1), 1500);
+                    }
+                }, 90);
+                lineIntervals.push(lineInt);
+            } else {
+                // Final footer shows after a small delay
+                setTimeout(() => {
+                    document.getElementById('matterFooter').style.display = 'block';
+                    document.getElementById('matterBackBtn').style.display = 'inline-block';
+                }, 1000);
+            }
+        }
+
+const emojiList = ['🩷', '🫂', '🍄', '🧸', '🩷', '😍', '🥳', '🥺', '♥️', '❤️‍🩹', '💗', '🩷', '💘', '🤍', '💓', '💞', '💕', '🫂', '🌹', '🥀', '🎁', '💛', '💚', '💙', '💜', '🩷', '🤍', '🩵', '♥️', '🩶', '🤎', '🐻'];
+
+// Limits the number of emojis falling at the same time
+const MAX_EMOJIS = 4; 
+
+function spawnEmoji() {
+    const container = document.getElementById('emoji-container');
+    if (!container) return;
+
+    // Check how many are currently falling
+    const currentCount = container.getElementsByClassName('falling-emoji').length;
+
+    if (currentCount < MAX_EMOJIS) {
+        const emojiEl = document.createElement('div');
+        emojiEl.classList.add('falling-emoji');
+        
+        // Randomly select one emoji from your list
+        emojiEl.innerText = emojiList[Math.floor(Math.random() * emojiList.length)];
+        
+        // Randomize horizontal position
+        const startPos = Math.random() * (window.innerWidth - 40);
+        
+        // "Heavy" fall speed (between 2 and 3 seconds)
+        const duration = Math.random() * 1 + 2; 
+        
+        // Randomize size for variety
+        const size = Math.random() * 20 + 25; // 25px to 45px
+        
+        emojiEl.style.left = startPos + 'px';
+        emojiEl.style.fontSize = size + 'px';
+        emojiEl.style.animationDuration = duration + 's';
+        
+        container.appendChild(emojiEl);
+        
+        // Remove from DOM when animation ends
+        setTimeout(() => {
+            emojiEl.remove();
+        }, duration * 1000);
+    }
+}
+
+// Initialize the system
+window.addEventListener('DOMContentLoaded', () => {
+    const container = document.createElement('div');
+    container.id = 'emoji-container';
+    document.body.appendChild(container);
+    
+    // Check every 400ms if it needs to drop a new emoji
+    setInterval(spawnEmoji, 400);
+});
+    </script>
+</body>
+</html>

@@ -712,6 +712,8 @@
 
 <script>
 
+ <script>
+
   /* =========================
      ELEMENTS
   ========================= */
@@ -739,14 +741,15 @@
   bgMusic.volume = 0.7;
 
   /*
-    Slide duration:
+    Each word gets 1.5 seconds.
 
-    10000 = 10 seconds
-    15000 = 15 seconds
-    20000 = 20 seconds
+    Example:
+    10 words = 15 seconds
+    20 words = 30 seconds
+    30 words = 45 seconds
   */
 
-  const SLIDE_TIME = 10000;
+  const SECONDS_PER_WORD = 1.5;
 
 
   /* =========================
@@ -762,6 +765,54 @@
   let touchStartY = 0;
 
   let isTouching = false;
+
+
+  /* =========================
+     GET SLIDE TIME
+  ========================= */
+
+  function getSlideTime(slide) {
+
+    const textElement =
+      slide.querySelector(".text");
+
+    /*
+      If a slide has no text,
+      show it for 3 seconds.
+    */
+
+    if (!textElement) {
+      return 3000;
+    }
+
+    /*
+      Get only the visible text.
+    */
+
+    const text =
+      textElement.innerText.trim();
+
+    /*
+      Count words.
+    */
+
+    const words =
+      text
+        .split(/\s+/)
+        .filter(Boolean);
+
+    /*
+      1.5 seconds per word.
+    */
+
+    const slideTime =
+      words.length *
+      SECONDS_PER_WORD *
+      1000;
+
+    return slideTime;
+
+  }
 
 
   /* =========================
@@ -817,7 +868,9 @@
       startBtn.classList.add("glow");
 
 
-      /* MUSIC */
+      /* =========================
+         MUSIC
+      ========================= */
 
       bgMusic
         .play()
@@ -857,20 +910,37 @@
     if (!slides.length) return;
 
 
+    /*
+      Remove current slide.
+    */
+
     slides[current]
       .classList
       .remove("active");
 
+
+    /*
+      Calculate next slide.
+    */
 
     current =
       (nextIndex + slides.length)
       % slides.length;
 
 
+    /*
+      Show next slide.
+    */
+
     slides[current]
       .classList
       .add("active");
 
+
+    /*
+      Restart timer using
+      the new slide's word count.
+    */
 
     restartSlideTimer();
 
@@ -922,6 +992,20 @@
 
     clearTimeout(slideTimer);
 
+
+    /*
+      Get timing based on
+      current slide word count.
+    */
+
+    const slideTime =
+      getSlideTime(slides[current]);
+
+
+    /*
+      Start countdown.
+    */
+
     slideTimer =
       setTimeout(
         () => {
@@ -929,7 +1013,7 @@
           nextSlide();
 
         },
-        SLIDE_TIME
+        slideTime
       );
 
   }
@@ -1031,13 +1115,17 @@
 
         if (deltaX < 0) {
 
-          /* LEFT → NEXT */
+          /*
+            LEFT → NEXT
+          */
 
           nextSlide();
 
         } else {
 
-          /* RIGHT → PREVIOUS */
+          /*
+            RIGHT → PREVIOUS
+          */
 
           previousSlide();
 
@@ -1078,6 +1166,10 @@
       if (!started) return;
 
 
+      /*
+        RIGHT ARROW / SPACE → NEXT
+      */
+
       if (
         event.key === "ArrowRight" ||
         event.key === " "
@@ -1089,6 +1181,10 @@
 
       }
 
+
+      /*
+        LEFT ARROW → PREVIOUS
+      */
 
       if (
         event.key === "ArrowLeft"
@@ -1104,6 +1200,5 @@
   );
 
 </script>
-
 </body>
 </html>

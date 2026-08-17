@@ -50,7 +50,7 @@ body {
 
 
 /* =========================================================
-   SUBTLE BACKGROUND GLOW
+   BACKGROUND GLOW
 ========================================================= */
 
 body::before {
@@ -73,7 +73,7 @@ body::before {
 
 
 /* =========================================================
-   INTRO SCREEN
+   INTRO
 ========================================================= */
 
 .intro {
@@ -91,12 +91,6 @@ body::before {
 
   gap: 25px;
 
-  /*
-    IMPORTANT:
-    Transparent background allows sparks
-    to remain visible from the beginning.
-  */
-
   background: transparent;
 
   z-index: 20;
@@ -106,8 +100,8 @@ body::before {
   visibility: visible;
 
   transition:
-    opacity 2s ease,
-    visibility 2s ease;
+    opacity 1s ease,
+    visibility 1s ease;
 }
 
 .intro.hide {
@@ -184,9 +178,9 @@ body::before {
 
   transition:
     transform 0.3s ease,
-    color 1.5s ease,
-    background 1.5s ease,
-    box-shadow 1.5s ease;
+    color 1s ease,
+    background 1s ease,
+    box-shadow 1s ease;
 }
 
 .intro-btn:hover {
@@ -256,7 +250,7 @@ body::before {
   opacity: 0;
 
   transition:
-    opacity 2s ease;
+    opacity 1s ease;
 
   touch-action: pan-y;
 
@@ -305,8 +299,8 @@ body::before {
   pointer-events: none;
 
   transition:
-    opacity 1.5s ease,
-    transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 
   will-change:
     opacity,
@@ -419,9 +413,9 @@ body::before {
 
   transition:
 
-    transform 1.5s ease,
+    transform 0.8s ease,
 
-    box-shadow 1.5s ease;
+    box-shadow 0.8s ease;
 }
 
 .slide.active .image {
@@ -967,9 +961,14 @@ const bgMusic =
    SETTINGS
 ========================================================= */
 
-bgMusic.volume = 0.7;
+/*
+  Faster than before:
+  1 word = 1 second
+*/
 
-const SECONDS_PER_WORD = 1.5;
+const SECONDS_PER_WORD = 1.0;
+
+bgMusic.volume = 0.7;
 
 
 /* =========================================================
@@ -990,7 +989,7 @@ let isTouching = false;
 
 
 /* =========================================================
-   SLIDE TIME
+   GET SLIDE TIME
 ========================================================= */
 
 function getSlideTime(slide) {
@@ -998,13 +997,10 @@ function getSlideTime(slide) {
   const textElement =
     slide.querySelector(".text");
 
-  /*
-    No text = 3 seconds.
-  */
 
   if (!textElement) {
 
-    return 3000;
+    return 2500;
 
   }
 
@@ -1026,13 +1022,14 @@ function getSlideTime(slide) {
 
 
   /*
-    Never show a slide for less than 4 seconds.
+    Minimum 3 seconds.
   */
 
   return Math.max(
     calculatedTime,
-    4000
+    3000
   );
+
 }
 
 
@@ -1045,43 +1042,30 @@ function createSpark() {
   const spark =
     document.createElement("div");
 
+
   spark.className =
     "spark";
 
-
-  /*
-    Random horizontal position.
-  */
 
   spark.style.left =
     Math.random() * 100 + "vw";
 
 
-  /*
-    Random size.
-  */
-
   const size =
     3 + Math.random() * 5;
 
+
   spark.style.width =
     size + "px";
+
 
   spark.style.height =
     size + "px";
 
 
-  /*
-    Random upward speed.
-  */
-
   const upwardTime =
     5 + Math.random() * 4;
 
-
-  /*
-    Random glow speed.
-  */
 
   const glowTime =
     1 + Math.random() * 1.5;
@@ -1091,11 +1075,6 @@ function createSpark() {
     `${upwardTime}s, ${glowTime}s`;
 
 
-  /*
-    sparkUp runs once.
-    sparkGlow runs forever.
-  */
-
   spark.style.animationIterationCount =
     "1, infinite";
 
@@ -1104,10 +1083,6 @@ function createSpark() {
     spark
   );
 
-
-  /*
-    Remove only after sparkUp ends.
-  */
 
   spark.addEventListener(
     "animationend",
@@ -1128,7 +1103,7 @@ function createSpark() {
 
 
 /* =========================================================
-   START SPARK GENERATOR
+   SPARK GENERATOR
 ========================================================= */
 
 setInterval(
@@ -1138,8 +1113,7 @@ setInterval(
 
 
 /*
-  Create some immediately so the starting
-  screen isn't empty while waiting.
+  Create sparks immediately.
 */
 
 for (
@@ -1164,10 +1138,6 @@ startBtn.addEventListener(
   "click",
   function() {
 
-    /*
-      Prevent multiple starts.
-    */
-
     if (started) {
       return;
     }
@@ -1175,10 +1145,6 @@ startBtn.addEventListener(
 
     started = true;
 
-
-    /*
-      Make button glow.
-    */
 
     startBtn.classList.add(
       "glow"
@@ -1188,12 +1154,6 @@ startBtn.addEventListener(
     /* =====================================================
        MUSIC
     ===================================================== */
-
-    /*
-      This is triggered directly by
-      the user's button click, so browsers
-      are allowed to start the audio.
-    */
 
     bgMusic
       .play()
@@ -1208,47 +1168,31 @@ startBtn.addEventListener(
 
 
     /* =====================================================
-       TRANSITION TO SLIDES
+       START SLIDES
     ===================================================== */
 
     setTimeout(
       function() {
-
-        /*
-          Hide intro.
-        */
 
         intro.classList.add(
           "hide"
         );
 
 
-        /*
-          Show slide container.
-        */
-
         slideBox.classList.add(
           "show"
         );
 
-
-        /*
-          Show first slide.
-        */
 
         slides[0].classList.add(
           "active"
         );
 
 
-        /*
-          Start automatic slideshow.
-        */
-
         startSlides();
 
       },
-      2000
+      1500
     );
 
   }
@@ -1266,19 +1210,10 @@ function showSlide(nextIndex) {
   }
 
 
-  /*
-    Remove current slide.
-  */
-
   slides[current]
     .classList
     .remove("active");
 
-
-  /*
-    Wrap around when reaching
-    beginning/end.
-  */
 
   current =
     (
@@ -1288,18 +1223,10 @@ function showSlide(nextIndex) {
     slides.length;
 
 
-  /*
-    Show new slide.
-  */
-
   slides[current]
     .classList
     .add("active");
 
-
-  /*
-    Restart automatic timer.
-  */
 
   restartSlideTimer();
 
@@ -1307,7 +1234,7 @@ function showSlide(nextIndex) {
 
 
 /* =========================================================
-   NEXT SLIDE
+   NEXT
 ========================================================= */
 
 function nextSlide() {
@@ -1320,7 +1247,7 @@ function nextSlide() {
 
 
 /* =========================================================
-   PREVIOUS SLIDE
+   PREVIOUS
 ========================================================= */
 
 function previousSlide() {
@@ -1333,7 +1260,7 @@ function previousSlide() {
 
 
 /* =========================================================
-   START SLIDES
+   START SLIDESHOW
 ========================================================= */
 
 function startSlides() {
@@ -1344,7 +1271,7 @@ function startSlides() {
 
 
 /* =========================================================
-   SLIDE TIMER
+   TIMER
 ========================================================= */
 
 function restartSlideTimer() {
@@ -1386,32 +1313,18 @@ slideBox.addEventListener(
     }
 
 
-    /*
-      Don't treat touch-generated click
-      as a separate tap.
-    */
-
     if (isTouching) {
       return;
     }
 
-
-    /*
-      Clicking an image does not advance.
-    */
 
     if (
       event.target.tagName === "IMG"
     ) {
 
       return;
-
     }
 
-
-    /*
-      Tap text/background → next.
-    */
 
     nextSlide();
 
@@ -1450,7 +1363,7 @@ slideBox.addEventListener(
 
 
 /* =========================================================
-   TOUCH END / SWIPE
+   TOUCH END
 ========================================================= */
 
 slideBox.addEventListener(
@@ -1484,10 +1397,6 @@ slideBox.addEventListener(
       60;
 
 
-    /*
-      Only horizontal swipes.
-    */
-
     if (
       Math.abs(deltaX) >
       minSwipeDistance &&
@@ -1497,22 +1406,11 @@ slideBox.addEventListener(
     ) {
 
 
-      /*
-        Swipe LEFT → NEXT
-      */
-
       if (deltaX < 0) {
 
         nextSlide();
 
-      }
-
-
-      /*
-        Swipe RIGHT → PREVIOUS
-      */
-
-      else {
+      } else {
 
         previousSlide();
 
@@ -1520,10 +1418,6 @@ slideBox.addEventListener(
 
     }
 
-
-    /*
-      Wait before allowing click.
-    */
 
     setTimeout(
       function() {
@@ -1554,10 +1448,6 @@ document.addEventListener(
     }
 
 
-    /*
-      RIGHT ARROW / SPACE → NEXT
-    */
-
     if (
       event.key === "ArrowRight" ||
       event.key === " "
@@ -1569,10 +1459,6 @@ document.addEventListener(
 
     }
 
-
-    /*
-      LEFT ARROW → PREVIOUS
-    */
 
     if (
       event.key === "ArrowLeft"

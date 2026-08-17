@@ -48,7 +48,7 @@
     justify-content: center;
     align-items: center;
 
-    gap: 30px;
+    gap: 25px;
 
     z-index: 5;
 
@@ -66,10 +66,11 @@
   .intro-title {
     color: #ffffff;
 
-    font-size: 5em;
+    font-size: 3.8em;
     font-weight: 700;
 
     letter-spacing: 1px;
+    text-align: center;
 
     text-shadow:
       0 0 12px rgba(255,255,255,0.4),
@@ -84,7 +85,7 @@
     }
 
     50% {
-      transform: translateY(-6px);
+      transform: translateY(-5px);
     }
 
     100% {
@@ -98,9 +99,9 @@
   ========================= */
 
   .intro-btn {
-    padding: 16px 46px;
+    padding: 13px 38px;
 
-    font-size: 1.9em;
+    font-size: 1.5em;
     font-weight: 700;
 
     border-radius: 50px;
@@ -126,9 +127,6 @@
     transform: scale(0.97);
   }
 
-
-  /* BUTTON INNER GLOW */
-
   .intro-btn.glow {
     color: #2b1b00;
 
@@ -141,10 +139,10 @@
       );
 
     box-shadow:
-      inset 0 0 25px rgba(255,255,255,0.6),
-      inset 0 0 50px rgba(255,200,80,0.8),
+      inset 0 0 20px rgba(255,255,255,0.6),
+      inset 0 0 40px rgba(255,200,80,0.8),
       0 0 25px rgba(255,170,60,0.6),
-      0 0 60px rgba(255,140,30,0.35);
+      0 0 55px rgba(255,140,30,0.3);
   }
 
 
@@ -155,13 +153,13 @@
   .slide-container {
     position: absolute;
 
-    top: 14%;
+    top: 10%;
     left: 50%;
 
     transform: translateX(-50%);
 
     width: 100%;
-    height: 80%;
+    height: 85%;
 
     text-align: center;
 
@@ -195,8 +193,8 @@
     opacity: 0;
 
     transform:
-      translateY(25px)
-      scale(0.98);
+      translateY(20px)
+      scale(0.985);
 
     display: flex;
 
@@ -204,7 +202,9 @@
     align-items: center;
     justify-content: flex-start;
 
-    gap: 26px;
+    gap: 20px;
+
+    padding: 0 15px;
 
     pointer-events: none;
 
@@ -237,39 +237,47 @@
 
     font-weight: 700;
 
+    max-width: 90%;
+
     text-shadow:
-      0 0 18px rgba(255,215,120,1),
-      0 0 45px rgba(255,160,60,0.9),
-      0 0 90px rgba(255,120,30,0.8);
+      0 0 14px rgba(255,215,120,1),
+      0 0 35px rgba(255,160,60,0.9),
+      0 0 70px rgba(255,120,30,0.7);
 
-    max-width: 95%;
-
-    animation: textGlow 3s ease-in-out infinite;
+    animation:
+      textGlow 3s ease-in-out infinite;
   }
 
   @keyframes textGlow {
+
     0% {
       filter: brightness(0.95);
     }
 
     50% {
-      filter: brightness(1.15);
+      filter: brightness(1.12);
     }
 
     100% {
       filter: brightness(0.95);
     }
+
   }
 
 
+  /* FIRST SLIDE */
+
   .text.first {
-    font-size: 5.2em;
+    font-size: 3.8em;
     line-height: 1.15;
   }
 
+
+  /* OTHER SLIDES */
+
   .text.other {
-    font-size: 3.3em;
-    line-height: 1.25;
+    font-size: 2.2em;
+    line-height: 1.3;
   }
 
 
@@ -278,16 +286,16 @@
   ========================= */
 
   .image {
-    width: 420px;
-    max-width: 90%;
+    width: 320px;
+    max-width: 75%;
 
-    border-radius: 20px;
-
-    box-shadow:
-      0 0 22px rgba(255,180,80,0.8),
-      0 0 70px rgba(255,120,30,0.6);
+    border-radius: 18px;
 
     object-fit: cover;
+
+    box-shadow:
+      0 0 18px rgba(255,180,80,0.8),
+      0 0 55px rgba(255,120,30,0.6);
 
     transition:
       transform 1.5s ease,
@@ -339,7 +347,6 @@
     pointer-events: none;
   }
 
-
   @keyframes sparkUp {
 
     from {
@@ -367,8 +374,8 @@
 
       opacity: 0;
     }
-  }
 
+  }
 
   @keyframes sparkGlow {
 
@@ -387,6 +394,7 @@
     100% {
       filter: brightness(1.2);
     }
+
   }
 
 
@@ -397,49 +405,56 @@
   @media (max-width: 600px) {
 
     .intro {
-      gap: 22px;
+      gap: 20px;
     }
 
     .intro-title {
-      font-size: 3em;
-      text-align: center;
+      font-size: 2.5em;
     }
 
     .intro-btn {
-      padding: 14px 38px;
-      font-size: 1.5em;
+      padding: 12px 34px;
+      font-size: 1.4em;
     }
+
 
     .slide-container {
       top: 7%;
-      height: 88%;
+      height: 90%;
     }
+
 
     .slide {
-      gap: 18px;
-      padding: 0 15px;
+      gap: 16px;
+      padding: 0 18px;
     }
 
+
     .text.first {
-      font-size: 2.8em;
+      font-size: 2.3em;
       line-height: 1.15;
     }
 
+
     .text.other {
-      font-size: 1.65em;
-      line-height: 1.3;
+      font-size: 1.35em;
+      line-height: 1.35;
+      max-width: 92%;
     }
 
+
     .image {
-      width: 85%;
-      max-width: 350px;
-      border-radius: 16px;
+      width: 75%;
+      max-width: 280px;
+      border-radius: 15px;
     }
+
 
     .spark {
       width: 4px;
       height: 4px;
     }
+
   }
 
 
@@ -450,25 +465,30 @@
   @media (max-width: 380px) {
 
     .intro-title {
-      font-size: 2.5em;
+      font-size: 2.2em;
     }
 
     .intro-btn {
-      font-size: 1.3em;
-      padding: 12px 32px;
+      font-size: 1.25em;
+      padding: 11px 30px;
+    }
+
+    .slide-container {
+      top: 6%;
     }
 
     .text.first {
-      font-size: 2.3em;
+      font-size: 2em;
     }
 
     .text.other {
-      font-size: 1.4em;
+      font-size: 1.2em;
     }
 
     .image {
-      width: 82%;
+      max-width: 240px;
     }
+
   }
 
 </style>
@@ -523,7 +543,6 @@
   </div>
 
 
-
   <!-- SLIDE 2 -->
 
   <div class="slide">
@@ -540,7 +559,6 @@
       alt="Memory">
 
   </div>
-
 
 
   <!-- SLIDE 3 -->
@@ -562,7 +580,6 @@
   </div>
 
 
-
   <!-- SLIDE 4 -->
 
   <div class="slide">
@@ -578,7 +595,6 @@
       alt="Memory">
 
   </div>
-
 
 
   <!-- SLIDE 5 -->
@@ -600,7 +616,6 @@
   </div>
 
 
-
   <!-- SLIDE 6 -->
 
   <div class="slide">
@@ -619,7 +634,6 @@
       alt="Best friends">
 
   </div>
-
 
 
   <!-- SLIDE 7 -->
@@ -643,7 +657,6 @@
   </div>
 
 
-
   <!-- SLIDE 8 -->
 
   <div class="slide">
@@ -664,7 +677,6 @@
   </div>
 
 
-
   <!-- SLIDE 9 -->
 
   <div class="slide">
@@ -672,7 +684,7 @@
     <div class="text other">
       you're the best Hanviiii Bestuuu...
       <br>
-      I don't know why you're close to my heart,
+      I don't why you're close to my heart,
       if i ever done anything,
       it's because i love you alot
       as My Bestuu 💖
@@ -727,7 +739,7 @@
   bgMusic.volume = 0.7;
 
   /*
-    Time between automatic slide changes.
+    Slide duration:
 
     10000 = 10 seconds
     15000 = 15 seconds
@@ -780,12 +792,9 @@
         spark.remove();
       }
     );
+
   }
 
-
-  /*
-    Create sparks continuously.
-  */
 
   setInterval(
     createSpark,
@@ -794,7 +803,7 @@
 
 
   /* =========================
-     START BUTTON
+     START
   ========================= */
 
   startBtn.addEventListener(
@@ -808,7 +817,7 @@
       startBtn.classList.add("glow");
 
 
-      /* PLAY MUSIC */
+      /* MUSIC */
 
       bgMusic
         .play()
@@ -816,8 +825,8 @@
 
 
       /*
-        Give the button time to glow
-        before showing the slides.
+        Show slides after
+        button glow animation.
       */
 
       setTimeout(
@@ -853,12 +862,6 @@
       .remove("active");
 
 
-    /*
-      Modulo allows the slideshow
-      to loop from last → first
-      and first → last.
-    */
-
     current =
       (nextIndex + slides.length)
       % slides.length;
@@ -868,11 +871,6 @@
       .classList
       .add("active");
 
-
-    /*
-      Restart automatic timer after
-      every manual navigation.
-    */
 
     restartSlideTimer();
 
@@ -906,7 +904,7 @@
 
 
   /* =========================
-     START AUTOMATIC SLIDES
+     START SLIDESHOW
   ========================= */
 
   function startSlides() {
@@ -917,13 +915,12 @@
 
 
   /* =========================
-     AUTOMATIC TIMER
+     TIMER
   ========================= */
 
   function restartSlideTimer() {
 
     clearTimeout(slideTimer);
-
 
     slideTimer =
       setTimeout(
@@ -939,7 +936,7 @@
 
 
   /* =========================
-     TAP / CLICK
+     TAP NAVIGATION
   ========================= */
 
   slideBox.addEventListener(
@@ -948,17 +945,12 @@
 
       if (!started) return;
 
-      /*
-        Don't navigate when the user
-        has just performed a swipe.
-      */
-
       if (isTouching) return;
 
 
       /*
-        Clicking an image doesn't
-        immediately change slides.
+        Clicking directly on an image
+        won't advance the slide.
       */
 
       if (
@@ -975,7 +967,7 @@
 
 
   /* =========================
-     TOUCH START
+     SWIPE START
   ========================= */
 
   slideBox.addEventListener(
@@ -1000,7 +992,7 @@
 
 
   /* =========================
-     TOUCH END
+     SWIPE END
   ========================= */
 
   slideBox.addEventListener(
@@ -1024,17 +1016,12 @@
         touchEndY - touchStartY;
 
 
-      /*
-        Minimum distance required
-        for a swipe.
-      */
-
       const minSwipeDistance = 60;
 
 
       /*
-        Make sure it's a horizontal
-        swipe rather than vertical scrolling.
+        Only recognize horizontal
+        gestures as slides.
       */
 
       if (
@@ -1044,19 +1031,13 @@
 
         if (deltaX < 0) {
 
-          /*
-            Swipe LEFT
-            → NEXT
-          */
+          /* LEFT → NEXT */
 
           nextSlide();
 
         } else {
 
-          /*
-            Swipe RIGHT
-            → PREVIOUS
-          */
+          /* RIGHT → PREVIOUS */
 
           previousSlide();
 
@@ -1066,13 +1047,15 @@
 
 
       /*
-        Prevent touchend from being
-        mistaken for a normal click.
+        Prevent accidental click
+        after swipe.
       */
 
       setTimeout(
         () => {
+
           isTouching = false;
+
         },
         100
       );
@@ -1085,7 +1068,7 @@
 
 
   /* =========================
-     KEYBOARD NAVIGATION
+     KEYBOARD
   ========================= */
 
   document.addEventListener(

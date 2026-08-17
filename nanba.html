@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Magic Spark Wish – Slides</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    background: radial-gradient(circle, #111, #000);
+    height: 100vh;
+    overflow: hidden;
+    font-family: "Nunito", sans-serif;
+    user-select: none;
+  }
+
+  /* INTRO SCREEN */
+  .intro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    z-index: 5;
+    transition: opacity 2s ease;
+  }
+
+  .intro.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .intro-title {
+    color: #ffffff;
+    font-size: 5em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(255,255,255,0.4);
+  }
+
+  .intro-btn {
+    padding: 16px 46px;
+    font-size: 1.9em;
+    font-weight: 700;
+    border-radius: 50px;
+    border: none;
+    background: #111;
+    color: #bbb;
+    cursor: pointer;
+    transition: all 1.8s ease;
+  }
+
+  /* BUTTON INNER GLOW */
+  .intro-btn.glow {
+    color: #2b1b00;
+    background: radial-gradient(circle at top, #ffe29a, #ffb84d, #ff9a2f);
+    box-shadow:
+      inset 0 0 25px rgba(255,255,255,0.6),
+      inset 0 0 50px rgba(255,200,80,0.8),
+      0 0 25px rgba(255,170,60,0.6);
+  }
+
+  /* SLIDES */
+  .slide-container {
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+
+  .slide-container.show {
+    opacity: 1;
+  }
+
+  .slide {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 2s ease, transform 2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .text {
+    color: #ffd87a;
+    font-weight: 700;
+    text-shadow:
+      0 0 18px rgba(255,215,120,1),
+      0 0 45px rgba(255,160,60,0.9),
+      0 0 90px rgba(255,120,30,0.8);
+  }
+
+  .text.first {
+    font-size: 5.2em;
+    line-height: 1.15;
+  }
+
+  .text.other {
+    font-size: 3.3em;
+    line-height: 1.25;
+  }
+
+  .image {
+    width: 420px;
+    max-width: 90%;
+    border-radius: 20px;
+    box-shadow:
+      0 0 22px rgba(255,180,80,0.8),
+      0 0 70px rgba(255,120,30,0.6);
+  }
+
+  /* SPARKS */
+  .spark {
+    position: absolute;
+    bottom: 0;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, #fff6a5, #ffb347, red);
+    border-radius: 50%;
+    animation-name: sparkUp, sparkGlow;
+    animation-timing-function: linear, ease-in-out;
+    animation-fill-mode: forwards;
+    box-shadow:
+      0 0 6px #ffcc66,
+      0 0 14px orange;
+  }
+
+  @keyframes sparkUp {
+    from { transform: translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    to { transform: translateY(-85vh); opacity: 0; }
+  }
+
+  @keyframes sparkGlow {
+    0% { filter: brightness(0.6); }
+    30% { filter: brightness(1.4); }
+    60% { filter: brightness(0.8); }
+    100% { filter: brightness(1.2); }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <div class="intro-title">ready ah?</div>
+  <button class="intro-btn" id="startBtn">aama</button>
+</div>
+
+<!-- SLIDES -->
+<div class="slide-container" id="slides">
+
+  <div class="slide">
+    <div class="text first">oye.. en Bestuu 😌</div>
+    <img src="image1.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">Unna maadhiri oru friend enakku kedachadhukku, <br>naan romba lucky ah feel panren 💛</div>
+    <img src="image2.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">nijamaave neenga romba sweet ahum lovely ahum irukka 😍</div>
+    <img src="image3.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">and haan… nee dhaan the best,<br>Mine only diamond 🤗</div>
+    <img src="image4.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">adhanaala dhaan,<br>eppovume en Bestfriend nee dhaan 😽</div>
+    <img src="image5.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">eppovume happy ah iru,<br>and you're not alone, naam eppovume onnaave iruppoma 🥹</div>
+    <img src="image6.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">marakkaadha,<br>naam last varaikkum onnaave iruppom 🫣</div>
+    <img src="image7.jpg" class="image">
+  </div>
+
+  <div class="slide">
+    <div class="text other">you're the best Hanviiii 💖</div>
+  </div>
+
+
+</div>
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
+
+<script>
+const intro = document.getElementById("intro");
+const startBtn = document.getElementById("startBtn");
+const slideBox = document.getElementById("slides");
+const slides = document.querySelectorAll(".slide");
+const bgMusic = document.getElementById("bgMusic");
+
+let current = 0;
+let started = false;
+
+/* MUSIC SETTINGS */
+bgMusic.volume = 0.7;
+
+/* SPARKS */
+function createSpark() {
+  const spark = document.createElement("div");
+  spark.className = "spark";
+  spark.style.left = Math.random() * 100 + "vw";
+  spark.style.animationDuration = `${5 + Math.random() * 3}s, ${1 + Math.random() * 1.5}s`;
+  spark.style.animationIterationCount = "1, infinite";
+  document.body.appendChild(spark);
+  spark.addEventListener("animationend", () => spark.remove());
+}
+setInterval(createSpark, 220);
+
+/* START */
+startBtn.addEventListener("click", () => {
+  if (started) return;
+  started = true;
+
+  startBtn.classList.add("glow");
+
+  /* play music */
+  bgMusic.play().catch(() => {});
+
+  setTimeout(() => {
+    intro.classList.add("hide");
+    slideBox.classList.add("show");
+    slides[0].classList.add("active");
+    startSlides();
+  }, 2000);
+});
+
+function startSlides() {
+  setInterval(() => {
+    slides[current].classList.remove("active");
+    current = (current + 1) % slides.length;
+    slides[current].classList.add("active");
+  }, 5000);
+}
+</script>
+
+</body>
+</html>

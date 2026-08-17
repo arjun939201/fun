@@ -1,112 +1,266 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Magic Spark Wish – Slides</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+
+  /* =========================
+     GENERAL
+  ========================= */
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+  }
+
   body {
     margin: 0;
     background: radial-gradient(circle, #111, #000);
-    height: 100vh;
     overflow: hidden;
     font-family: "Nunito", sans-serif;
     user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
   }
 
-  /* INTRO SCREEN */
+
+  /* =========================
+     INTRO SCREEN
+  ========================= */
+
   .intro {
     position: absolute;
     inset: 0;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     gap: 30px;
+
     z-index: 5;
-    transition: opacity 2s ease;
+
+    transition:
+      opacity 2s ease,
+      visibility 2s ease;
   }
 
   .intro.hide {
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
   }
 
   .intro-title {
     color: #ffffff;
+
     font-size: 5em;
     font-weight: 700;
+
     letter-spacing: 1px;
-    text-shadow: 0 0 12px rgba(255,255,255,0.4);
+
+    text-shadow:
+      0 0 12px rgba(255,255,255,0.4),
+      0 0 35px rgba(255,200,100,0.25);
+
+    animation: titleFloat 3s ease-in-out infinite;
   }
+
+  @keyframes titleFloat {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-6px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+
+  /* =========================
+     START BUTTON
+  ========================= */
 
   .intro-btn {
     padding: 16px 46px;
+
     font-size: 1.9em;
     font-weight: 700;
+
     border-radius: 50px;
     border: none;
+
     background: #111;
     color: #bbb;
+
     cursor: pointer;
-    transition: all 1.8s ease;
+
+    transition:
+      all 1.8s ease;
+
+    box-shadow:
+      0 0 0 rgba(255,180,70,0);
   }
 
+  .intro-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .intro-btn:active {
+    transform: scale(0.97);
+  }
+
+
   /* BUTTON INNER GLOW */
+
   .intro-btn.glow {
     color: #2b1b00;
-    background: radial-gradient(circle at top, #ffe29a, #ffb84d, #ff9a2f);
+
+    background:
+      radial-gradient(
+        circle at top,
+        #ffe29a,
+        #ffb84d,
+        #ff9a2f
+      );
+
     box-shadow:
       inset 0 0 25px rgba(255,255,255,0.6),
       inset 0 0 50px rgba(255,200,80,0.8),
-      0 0 25px rgba(255,170,60,0.6);
+      0 0 25px rgba(255,170,60,0.6),
+      0 0 60px rgba(255,140,30,0.35);
   }
 
-  /* SLIDES */
+
+  /* =========================
+     SLIDE CONTAINER
+  ========================= */
+
   .slide-container {
     position: absolute;
+
     top: 14%;
     left: 50%;
+
     transform: translateX(-50%);
+
     width: 100%;
+    height: 80%;
+
     text-align: center;
+
     pointer-events: none;
+
     opacity: 0;
+
     transition: opacity 2s ease;
+
+    touch-action: pan-y;
   }
 
   .slide-container.show {
     opacity: 1;
   }
 
+
+  /* =========================
+     SLIDES
+  ========================= */
+
   .slide {
     position: absolute;
+
+    top: 0;
+    left: 0;
+
     width: 100%;
+    min-height: 100%;
+
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 2s ease, transform 2s ease;
+
+    transform:
+      translateY(25px)
+      scale(0.98);
+
     display: flex;
+
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+
     gap: 26px;
+
+    pointer-events: none;
+
+    transition:
+      opacity 1.5s ease,
+      transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+
+    will-change:
+      opacity,
+      transform;
   }
 
   .slide.active {
     opacity: 1;
-    transform: translateY(0);
+
+    transform:
+      translateY(0)
+      scale(1);
+
+    pointer-events: auto;
   }
+
+
+  /* =========================
+     TEXT
+  ========================= */
 
   .text {
     color: #ffd87a;
+
     font-weight: 700;
+
     text-shadow:
       0 0 18px rgba(255,215,120,1),
       0 0 45px rgba(255,160,60,0.9),
       0 0 90px rgba(255,120,30,0.8);
+
+    max-width: 95%;
+
+    animation: textGlow 3s ease-in-out infinite;
   }
+
+  @keyframes textGlow {
+    0% {
+      filter: brightness(0.95);
+    }
+
+    50% {
+      filter: brightness(1.15);
+    }
+
+    100% {
+      filter: brightness(0.95);
+    }
+  }
+
 
   .text.first {
     font-size: 5.2em;
@@ -118,155 +272,854 @@
     line-height: 1.25;
   }
 
+
+  /* =========================
+     IMAGES
+  ========================= */
+
   .image {
     width: 420px;
     max-width: 90%;
+
     border-radius: 20px;
+
     box-shadow:
       0 0 22px rgba(255,180,80,0.8),
       0 0 70px rgba(255,120,30,0.6);
+
+    object-fit: cover;
+
+    transition:
+      transform 1.5s ease,
+      box-shadow 1.5s ease;
   }
 
-  /* SPARKS */
+  .slide.active .image {
+    transform: scale(1);
+  }
+
+
+  /* =========================
+     SPARKS
+  ========================= */
+
   .spark {
     position: absolute;
+
     bottom: 0;
+
     width: 6px;
     height: 6px;
-    background: radial-gradient(circle, #fff6a5, #ffb347, red);
+
+    background:
+      radial-gradient(
+        circle,
+        #fff6a5,
+        #ffb347,
+        red
+      );
+
     border-radius: 50%;
-    animation-name: sparkUp, sparkGlow;
-    animation-timing-function: linear, ease-in-out;
-    animation-fill-mode: forwards;
+
+    animation-name:
+      sparkUp,
+      sparkGlow;
+
+    animation-timing-function:
+      linear,
+      ease-in-out;
+
+    animation-fill-mode:
+      forwards;
+
     box-shadow:
       0 0 6px #ffcc66,
       0 0 14px orange;
+
+    pointer-events: none;
   }
+
 
   @keyframes sparkUp {
-    from { transform: translateY(0); opacity: 0; }
-    10% { opacity: 1; }
-    to { transform: translateY(-85vh); opacity: 0; }
+
+    from {
+      transform:
+        translateY(0)
+        translateX(0);
+
+      opacity: 0;
+    }
+
+    10% {
+      opacity: 1;
+    }
+
+    50% {
+      transform:
+        translateY(-45vh)
+        translateX(10px);
+    }
+
+    to {
+      transform:
+        translateY(-85vh)
+        translateX(-10px);
+
+      opacity: 0;
+    }
   }
 
+
   @keyframes sparkGlow {
-    0% { filter: brightness(0.6); }
-    30% { filter: brightness(1.4); }
-    60% { filter: brightness(0.8); }
-    100% { filter: brightness(1.2); }
+
+    0% {
+      filter: brightness(0.6);
+    }
+
+    30% {
+      filter: brightness(1.4);
+    }
+
+    60% {
+      filter: brightness(0.8);
+    }
+
+    100% {
+      filter: brightness(1.2);
+    }
   }
+
+
+  /* =========================
+     MOBILE
+  ========================= */
+
+  @media (max-width: 600px) {
+
+    .intro {
+      gap: 22px;
+    }
+
+    .intro-title {
+      font-size: 3em;
+      text-align: center;
+    }
+
+    .intro-btn {
+      padding: 14px 38px;
+      font-size: 1.5em;
+    }
+
+    .slide-container {
+      top: 7%;
+      height: 88%;
+    }
+
+    .slide {
+      gap: 18px;
+      padding: 0 15px;
+    }
+
+    .text.first {
+      font-size: 2.8em;
+      line-height: 1.15;
+    }
+
+    .text.other {
+      font-size: 1.65em;
+      line-height: 1.3;
+    }
+
+    .image {
+      width: 85%;
+      max-width: 350px;
+      border-radius: 16px;
+    }
+
+    .spark {
+      width: 4px;
+      height: 4px;
+    }
+  }
+
+
+  /* =========================
+     VERY SMALL PHONES
+  ========================= */
+
+  @media (max-width: 380px) {
+
+    .intro-title {
+      font-size: 2.5em;
+    }
+
+    .intro-btn {
+      font-size: 1.3em;
+      padding: 12px 32px;
+    }
+
+    .text.first {
+      font-size: 2.3em;
+    }
+
+    .text.other {
+      font-size: 1.4em;
+    }
+
+    .image {
+      width: 82%;
+    }
+  }
+
 </style>
 </head>
 
+
 <body>
 
-<!-- INTRO -->
+
+<!-- =========================
+     INTRO
+========================= -->
+
 <div class="intro" id="intro">
-  <div class="intro-title">ready ah?</div>
-  <button class="intro-btn" id="startBtn">aama</button>
+
+  <div class="intro-title">
+    ready ah?
+  </div>
+
+  <button
+    class="intro-btn"
+    id="startBtn">
+    aama
+  </button>
+
 </div>
 
-<!-- SLIDES -->
-<div class="slide-container" id="slides">
+
+
+<!-- =========================
+     SLIDES
+========================= -->
+
+<div
+  class="slide-container"
+  id="slides">
+
+
+  <!-- SLIDE 1 -->
 
   <div class="slide">
-    <div class="text first">oye.. welcome en Bestuu 😌</div>
-    <img src="image1.jpg" class="image">
+
+    <div class="text first">
+      oye.. welcome en Bestuu 😌
+    </div>
+
+    <img
+      src="image1.jpg"
+      class="image"
+      alt="Bestuu">
+
   </div>
 
+
+
+  <!-- SLIDE 2 -->
+
   <div class="slide">
-    <div class="text other"> Kadavul unna enakku kuduthadhukku <br>naan romba lucky ah feel panren 🤗💛</div>
-    <img src="image2.jpg" class="image">
+
+    <div class="text other">
+      Kadavul unna enakku kuduthadhukku
+      <br>
+      naan romba lucky ah feel panren 🤗💛
+    </div>
+
+    <img
+      src="image2.jpg"
+      class="image"
+      alt="Memory">
+
   </div>
-  
-<div class="slide">
-    <div class="text other"> Unna maadhiri oru friend en life-la idhuvaraikkum eppovume irundhadhu illa, naan eppovume un nizhal maadhiri un koodave irukkanum-nu nenakkuren </div>
-    <img src="image3.jpg" class="image">
+
+
+
+  <!-- SLIDE 3 -->
+
+  <div class="slide">
+
+    <div class="text other">
+      Unna maadhiri oru friend en life-la
+      idhuvaraikkum eppovume irundhadhu illa,
+      naan eppovume un nizhal maadhiri
+      un koodave irukkanum-nu nenakkuren
+    </div>
+
+    <img
+      src="image3.jpg"
+      class="image"
+      alt="Memory">
+
+  </div>
+
+
+
+  <!-- SLIDE 4 -->
+
+  <div class="slide">
+
+    <div class="text other">
+      nijamaave neenga romba genuine,
+      innocent, sweet and lovely ah irukka 😍
+    </div>
+
+    <img
+      src="image3.jpg"
+      class="image"
+      alt="Memory">
+
+  </div>
+
+
+
+  <!-- SLIDE 5 -->
+
+  <div class="slide">
+
+    <div class="text other">
+      evlo per nee appuram vandhaalum,
+      enakku nee dhaan the best,
+      <br>
+      Mine one and only diamond 🤗
+    </div>
+
+    <img
+      src="image4.jpg"
+      class="image"
+      alt="Diamond">
+
+  </div>
+
+
+
+  <!-- SLIDE 6 -->
+
+  <div class="slide">
+
+    <div class="text other">
+      adhanaala dhaan,
+      <br>
+      ellame enakku nee dhaan,
+      indha jenmathukku nee maadhiri
+      oru nalla friend podhum 😽❤️
+    </div>
+
+    <img
+      src="image5.jpg"
+      class="image"
+      alt="Best friends">
+
+  </div>
+
+
+
+  <!-- SLIDE 7 -->
+
+  <div class="slide">
+
+    <div class="text other">
+      eppovume happy ah iru🤗,
+      <br>
+      and you're not alone,
+      naam eppovume onnaave iruppoma,
+      enakku un kooda irukkaradhu
+      romba pidikkum 🥹
+    </div>
+
+    <img
+      src="image6.jpg"
+      class="image"
+      alt="Together">
+
+  </div>
+
+
+
+  <!-- SLIDE 8 -->
+
+  <div class="slide">
+
+    <div class="text other">
+      marakkaadha,
+      <br>
+      naam last varaikkum onnaave iruppom,
+      enakku adhukku mela vera edhuvume
+      vendaam indha life-ku 🫣
+    </div>
+
+    <img
+      src="image7.jpg"
+      class="image"
+      alt="Forever">
+
+  </div>
+
+
+
+  <!-- SLIDE 9 -->
+
+  <div class="slide">
+
+    <div class="text other">
+      you're the best Hanviiii Bestuuu...
+      <br>
+      I don't why you're close to my heart,
+      if i ever done anything,
+      it's because i love you alot
+      as My Bestuu 💖
+    </div>
+
+  </div>
+
+
 </div>
-  <div class="slide">
-    <div class="text other">nijamaave neenga romba genuine, innocent, sweet and lovely ah irukka 😍 </div>
-    <img src="image3.jpg" class="image">
-  </div>
-
-  <div class="slide">
-    <div class="text other">evlo per nee appuram vandhaalum, enakku nee dhaan the best,<br>Mine one and only diamond 🤗</div>
-    <img src="image4.jpg" class="image">
-  </div>
-
-  <div class="slide">
-    <div class="text other">adhanaala dhaan,<br>ellame enakku nee dhaan, indha jenmathukku nee maadhiri oru nalla friend podhum 😽❤️</div>
-    <img src="image5.jpg" class="image">
-  </div>
-
-  <div class="slide">
-    <div class="text other">eppovume happy ah iru🤗,<br>and you're not alone, naam eppovume onnaave iruppoma, enakku un kooda irukkaradhu romba pidikkum 🥹</div>
-    <img src="image6.jpg" class="image">
-  </div>
-
-  <div class="slide">
-    <div class="text other">marakkaadha,<br>naam last varaikkum onnaave iruppom, enakku adhukku mela vera edhuvume vendaam indha life-ku 🫣</div>
-    <img src="image7.jpg" class="image">
-  </div>
-
-  <div class="slide">
-    <div class="text other">you're the best Hanviiii Bestuuu... I don't why you're close to my heart, if i ever done anything, it's because i love you alot as My Bestuu 💖</div>
-  </div>
 
 
-</div>
-<!-- BACKGROUND MUSIC -->
-<audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
+
+<!-- =========================
+     BACKGROUND MUSIC
+========================= -->
+
+<audio
+  id="bgMusic"
+  src="music.mp3"
+  loop
+  preload="auto">
+</audio>
+
+
 
 <script>
-const intro = document.getElementById("intro");
-const startBtn = document.getElementById("startBtn");
-const slideBox = document.getElementById("slides");
-const slides = document.querySelectorAll(".slide");
-const bgMusic = document.getElementById("bgMusic");
 
-let current = 0;
-let started = false;
+  /* =========================
+     ELEMENTS
+  ========================= */
 
-/* MUSIC SETTINGS */
-bgMusic.volume = 0.7;
+  const intro =
+    document.getElementById("intro");
 
-/* SPARKS */
-function createSpark() {
-  const spark = document.createElement("div");
-  spark.className = "spark";
-  spark.style.left = Math.random() * 100 + "vw";
-  spark.style.animationDuration = `${5 + Math.random() * 3}s, ${1 + Math.random() * 1.5}s`;
-  spark.style.animationIterationCount = "1, infinite";
-  document.body.appendChild(spark);
-  spark.addEventListener("animationend", () => spark.remove());
-}
-setInterval(createSpark, 220);
+  const startBtn =
+    document.getElementById("startBtn");
 
-/* START */
-startBtn.addEventListener("click", () => {
-  if (started) return;
-  started = true;
+  const slideBox =
+    document.getElementById("slides");
 
-  startBtn.classList.add("glow");
+  const slides =
+    document.querySelectorAll(".slide");
 
-  /* play music */
-  bgMusic.play().catch(() => {});
+  const bgMusic =
+    document.getElementById("bgMusic");
 
-  setTimeout(() => {
-    intro.classList.add("hide");
-    slideBox.classList.add("show");
-    slides[0].classList.add("active");
-    startSlides();
-  }, 2000);
-});
 
-function startSlides() {
-  setInterval(() => {
-    slides[current].classList.remove("active");
-    current = (current + 1) % slides.length;
-    slides[current].classList.add("active");
-  }, 5000);
-}
+  /* =========================
+     SETTINGS
+  ========================= */
+
+  bgMusic.volume = 0.7;
+
+  /*
+    Time between automatic slide changes.
+
+    10000 = 10 seconds
+    15000 = 15 seconds
+    20000 = 20 seconds
+  */
+
+  const SLIDE_TIME = 10000;
+
+
+  /* =========================
+     VARIABLES
+  ========================= */
+
+  let current = 0;
+  let started = false;
+
+  let slideTimer = null;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  let isTouching = false;
+
+
+  /* =========================
+     SPARKS
+  ========================= */
+
+  function createSpark() {
+
+    const spark =
+      document.createElement("div");
+
+    spark.className = "spark";
+
+    spark.style.left =
+      Math.random() * 100 + "vw";
+
+    spark.style.animationDuration =
+      `${5 + Math.random() * 3}s, ${1 + Math.random() * 1.5}s`;
+
+    spark.style.animationIterationCount =
+      "1, infinite";
+
+    document.body.appendChild(spark);
+
+    spark.addEventListener(
+      "animationend",
+      () => {
+        spark.remove();
+      }
+    );
+  }
+
+
+  /*
+    Create sparks continuously.
+  */
+
+  setInterval(
+    createSpark,
+    220
+  );
+
+
+  /* =========================
+     START BUTTON
+  ========================= */
+
+  startBtn.addEventListener(
+    "click",
+    () => {
+
+      if (started) return;
+
+      started = true;
+
+      startBtn.classList.add("glow");
+
+
+      /* PLAY MUSIC */
+
+      bgMusic
+        .play()
+        .catch(() => {});
+
+
+      /*
+        Give the button time to glow
+        before showing the slides.
+      */
+
+      setTimeout(
+        () => {
+
+          intro.classList.add("hide");
+
+          slideBox.classList.add("show");
+
+          slides[0].classList.add("active");
+
+          startSlides();
+
+        },
+        2000
+      );
+
+    }
+  );
+
+
+  /* =========================
+     SHOW SLIDE
+  ========================= */
+
+  function showSlide(nextIndex) {
+
+    if (!slides.length) return;
+
+
+    slides[current]
+      .classList
+      .remove("active");
+
+
+    /*
+      Modulo allows the slideshow
+      to loop from last → first
+      and first → last.
+    */
+
+    current =
+      (nextIndex + slides.length)
+      % slides.length;
+
+
+    slides[current]
+      .classList
+      .add("active");
+
+
+    /*
+      Restart automatic timer after
+      every manual navigation.
+    */
+
+    restartSlideTimer();
+
+  }
+
+
+  /* =========================
+     NEXT
+  ========================= */
+
+  function nextSlide() {
+
+    showSlide(
+      current + 1
+    );
+
+  }
+
+
+  /* =========================
+     PREVIOUS
+  ========================= */
+
+  function previousSlide() {
+
+    showSlide(
+      current - 1
+    );
+
+  }
+
+
+  /* =========================
+     START AUTOMATIC SLIDES
+  ========================= */
+
+  function startSlides() {
+
+    restartSlideTimer();
+
+  }
+
+
+  /* =========================
+     AUTOMATIC TIMER
+  ========================= */
+
+  function restartSlideTimer() {
+
+    clearTimeout(slideTimer);
+
+
+    slideTimer =
+      setTimeout(
+        () => {
+
+          nextSlide();
+
+        },
+        SLIDE_TIME
+      );
+
+  }
+
+
+  /* =========================
+     TAP / CLICK
+  ========================= */
+
+  slideBox.addEventListener(
+    "click",
+    (event) => {
+
+      if (!started) return;
+
+      /*
+        Don't navigate when the user
+        has just performed a swipe.
+      */
+
+      if (isTouching) return;
+
+
+      /*
+        Clicking an image doesn't
+        immediately change slides.
+      */
+
+      if (
+        event.target.tagName === "IMG"
+      ) {
+        return;
+      }
+
+
+      nextSlide();
+
+    }
+  );
+
+
+  /* =========================
+     TOUCH START
+  ========================= */
+
+  slideBox.addEventListener(
+    "touchstart",
+    (event) => {
+
+      if (!started) return;
+
+      isTouching = true;
+
+      touchStartX =
+        event.touches[0].clientX;
+
+      touchStartY =
+        event.touches[0].clientY;
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  /* =========================
+     TOUCH END
+  ========================= */
+
+  slideBox.addEventListener(
+    "touchend",
+    (event) => {
+
+      if (!started) return;
+
+
+      const touchEndX =
+        event.changedTouches[0].clientX;
+
+      const touchEndY =
+        event.changedTouches[0].clientY;
+
+
+      const deltaX =
+        touchEndX - touchStartX;
+
+      const deltaY =
+        touchEndY - touchStartY;
+
+
+      /*
+        Minimum distance required
+        for a swipe.
+      */
+
+      const minSwipeDistance = 60;
+
+
+      /*
+        Make sure it's a horizontal
+        swipe rather than vertical scrolling.
+      */
+
+      if (
+        Math.abs(deltaX) > minSwipeDistance &&
+        Math.abs(deltaX) > Math.abs(deltaY)
+      ) {
+
+        if (deltaX < 0) {
+
+          /*
+            Swipe LEFT
+            → NEXT
+          */
+
+          nextSlide();
+
+        } else {
+
+          /*
+            Swipe RIGHT
+            → PREVIOUS
+          */
+
+          previousSlide();
+
+        }
+
+      }
+
+
+      /*
+        Prevent touchend from being
+        mistaken for a normal click.
+      */
+
+      setTimeout(
+        () => {
+          isTouching = false;
+        },
+        100
+      );
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  /* =========================
+     KEYBOARD NAVIGATION
+  ========================= */
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (!started) return;
+
+
+      if (
+        event.key === "ArrowRight" ||
+        event.key === " "
+      ) {
+
+        event.preventDefault();
+
+        nextSlide();
+
+      }
+
+
+      if (
+        event.key === "ArrowLeft"
+      ) {
+
+        event.preventDefault();
+
+        previousSlide();
+
+      }
+
+    }
+  );
+
 </script>
 
 </body>
